@@ -1,6 +1,7 @@
 var Authy = {};
 
 Authy.UI = function() {
+    // Attributes
     var self = this;
     var countriesList = [
       {"code":"US","name":"United States","call_code":"1"},{"code":"CA","name":"Canada","call_code":"1"},
@@ -101,6 +102,7 @@ Authy.UI = function() {
     ];
     var countries = [];
 
+    // Private Members
     var setupCellphoneValidation = function() {
         var cellPhone = document.getElementById("authy-cellphone");
         cellPhone.onblur = function(){
@@ -228,9 +230,9 @@ Authy.UI = function() {
     };
 
     var buildItem = function(classActive, country) {
-        return '<li class="' + classActive + '" onclick="authyUi.autocomplete(this);return false;" rel="' +
-               country.call_code + '"><img src="images/flags/' + country.code.toLowerCase() + '.gif" alt="" /> <span>' +
-               "(+"+ country.call_code + ") " + country.name + '</span></li>';
+        return '<li class="' + classActive + '" onclick="authyUi.autocomplete(this);return false;" rel="' + country.call_code + '" data-name="' + country.name + '"'+ '>'+
+               '<img src="images/flags/' + country.code.toLowerCase() + '.gif" alt="" /> '+
+               ' <span>(+'+ country.call_code + ') ' + country.name + '</span></li>';
     }
 
     var setupCountriesDropdown = function() {
@@ -277,6 +279,7 @@ Authy.UI = function() {
         countriesSelect.parentNode.appendChild(countryCodeValue);
     };
 
+    // Public Members
     this.init = function() {
         setupAuthyToken();
         setupTooltip();
@@ -304,7 +307,7 @@ Authy.UI = function() {
     }
 
     this.autocomplete = function(obj) {
-        document.getElementById('countries-input').value = obj.getElementsByTagName('span')[0].innerHTML;
+        document.getElementById('countries-input').value = obj.getAttribute("data-name");
         document.getElementById('countries-autocomplete').style.display = "none";
 
         document.getElementById('country-code').value = obj.getAttribute('rel');
@@ -315,5 +318,3 @@ window.onload = function() {
     authyUi = new Authy.UI();
     authyUi.init();
 }
-
-
