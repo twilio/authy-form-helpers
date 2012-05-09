@@ -106,7 +106,7 @@ Authy.UI = function() {
     var setupCellphoneValidation = function() {
         var cellPhone = document.getElementById("authy-cellphone");
         cellPhone.onblur = function(){
-          if(cellPhone.value != '' && cellPhone.value.match(/^[\d.-]+$/)){
+          if(cellPhone.value != '' && cellPhone.value.match(/^([0-9][0-9][0-9])\W*([0-9][0-9]{2})\W*([0-9]{3,5})$/)){
             cellPhone.style.backgroundColor = "white";
           } else {
             cellPhone.style.backgroundColor = "red";
