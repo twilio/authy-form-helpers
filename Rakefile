@@ -26,6 +26,12 @@ namespace :js do
   end
 end
 
-
-task :default => ["css:compile", "js:compile"] do
+task :compile => ["css:compile", "js:compile"] do
 end
+
+task :package => ["compile"] do
+  puts "Generating form.authy.zip ..."
+  system "cd src; zip form.authy.zip form.authy.min.js form.authy.min.css images/**/*; mv form.authy.zip .."
+end
+
+task :default => :compile
