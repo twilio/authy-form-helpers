@@ -1,5 +1,7 @@
 *~
+*.tmproj
 .bundle
+temp
 db/*.sqlite3
 log/*.log
 tmp/

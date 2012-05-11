@@ -239,7 +239,7 @@ Authy.UI = function() {
 
     var buildItem = function(classActive, country) {
         return '<li class="' + classActive + '" onclick="authyUi.autocomplete(this);return false;" rel="' + country.call_code + '" data-name="' + country.name + '"'+ '>'+
-               '<img src="/images/flags/' + country.code.toLowerCase() + '.gif" alt="" /> '+
+               '<span class="aflag flag_' + country.code.toLowerCase() + '"></span> '+
                ' <span>(+'+ country.call_code + ') ' + country.name + '</span></li>';
     }
 

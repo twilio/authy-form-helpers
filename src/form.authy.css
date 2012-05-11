@@ -29,13 +29,13 @@
   cursor: pointer;
   width: 11px;
   height: 11px;
-  background: url(/images/close.gif) no-repeat 0 0;
+  background: url('images/close.gif') no-repeat 0 0;
 }
 
 #authy-token {
   padding: 3px 0 3px 22px;
   border: 1px solid #ccc;
-  background: url('/images/icon.png') no-repeat 2px center;
+  background: url('images/icon.png') no-repeat 2px center;
   color: #333;
 }
 
