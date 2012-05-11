@@ -320,6 +320,7 @@ Authy.UI = function() {
         var countriesInput = document.getElementById('countries-input');
         var str = countriesInput.value;
         var countriesAutocompleteHTML = '<ul>';
+        var ok = false;
 
         str = str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
         var reg = new RegExp(str, "g");
@@ -328,10 +329,13 @@ Authy.UI = function() {
             if(country.name.toLowerCase().match(reg)) {
                 countriesAutocompleteHTML += buildItem(classActive, country);
                 classActive = '';
+                ok = true;
             }
         }
         countriesAutocompleteHTML += '</ul>';
-        document.getElementById('countries-autocomplete').innerHTML = countriesAutocompleteHTML;
+        if(ok) {
+            document.getElementById('countries-autocomplete').innerHTML = countriesAutocompleteHTML;
+        }
     }
 
     this.autocomplete = function(obj) {
