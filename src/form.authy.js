@@ -224,6 +224,9 @@ Authy.UI = function() {
         document.getElementById('countries-input').onclick = function(e){
             if(e && e.stopPropagation) {
                 e.stopPropagation();
+
+                countriesInput.focus();
+                countriesInput.select();
             } else {
                 e = window.event;
                 e.cancelBubble = true;
@@ -314,7 +317,8 @@ Authy.UI = function() {
 
     this.searchItem = function() {
         var classActive = 'active';
-        var str = document.getElementById('countries-input').value;
+        var countriesInput = document.getElementById('countries-input');
+        var str = countriesInput.value;
         var countriesAutocompleteHTML = '<ul>';
 
         str = str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
