@@ -105,6 +105,8 @@ Authy.UI = function() {
     // Private Members
     var setupCellphoneValidation = function() {
         var cellPhone = document.getElementById("authy-cellphone");
+        if(!cellPhone) return;
+
         cellPhone.onblur = function(){
           if(cellPhone.value != '' && cellPhone.value.match(/^([0-9][0-9][0-9])\W*([0-9][0-9]{2})\W*([0-9]{3,5})$/)){
             cellPhone.style.backgroundColor = "white";
@@ -116,6 +118,7 @@ Authy.UI = function() {
 
     var setupAuthyToken = function() {
         var token = document.getElementById("authy-token");
+        if(!token) return;
 
         token.onblur = function() {
           if(token.value != '' && token.value.match(/^\d+$/)){
@@ -127,6 +130,9 @@ Authy.UI = function() {
     };
 
     var setupTooltip = function() {
+        var authy_help = document.getElementById("authy-help");
+        if(!authy_help) return;
+
         var tooltip = document.createElement("div");
         tooltip.setAttribute("id", "authy-tooltip");
         var tooltipTop = document.getElementById('authy-help').offsetTop + 20;
@@ -177,6 +183,8 @@ Authy.UI = function() {
 
     var setupEvents = function() {
         var countriesInput = document.getElementById('countries-input');
+
+        if(!countriesInput) return;
 
         countriesInput.onfocus = function() {
             document.getElementById('countries-autocomplete').style.display = "block";
@@ -231,28 +239,39 @@ Authy.UI = function() {
 
     var buildItem = function(classActive, country) {
         return '<li class="' + classActive + '" onclick="authyUi.autocomplete(this);return false;" rel="' + country.call_code + '" data-name="' + country.name + '"'+ '>'+
-               '<img src="images/flags/' + country.code.toLowerCase() + '.gif" alt="" /> '+
+               '<img src="/images/flags/' + country.code.toLowerCase() + '.gif" alt="" /> '+
                ' <span>(+'+ country.call_code + ') ' + country.name + '</span></li>';
     }
 
+    var absolutePosFor = function(element) {
+        var absTop = 0;
+        var absLeft = 0;
+        while(element) {
+            absTop += element.offsetTop;
+            absLeft += element.offsetLeft;
+
+            element = element.offsetParent;
+        }
+
+        return [absTop, absLeft];
+    }
+
     var setupCountriesDropdown = function() {
+        var countriesSelect = document.getElementById("authy-countries");
+
+        if(!countriesSelect) return;
+
         self.countries = [];
-        for( var i=0; i < document.getElementById("authy-countries").getElementsByTagName("option").length; i++){
+        for( var i=0; i < countriesSelect.getElementsByTagName("option").length; i++){
             var buf = [];
-            buf[0] = document.getElementById("authy-countries").getElementsByTagName("option")[i].value;
-            buf[1] = document.getElementById("authy-countries").getElementsByTagName("option")[i].innerHTML;
+            buf[0] = countriesSelect.getElementsByTagName("option")[i].value;
+            buf[1] = countriesSelect.getElementsByTagName("option")[i].innerHTML;
             self.countries.push(buf);
         }
 
-        var countriesSelect = document.getElementById("authy-countries");
-        var autocompleteTop = document.getElementById('authy-countries').offsetTop + 25;
-        var autocompleteLeft = document.getElementById('authy-countries').offsetLeft;
         countriesSelect.setAttribute("style", "display:none");
 
         var countriesAutocomplete = document.createElement("div");
-        countriesAutocomplete.setAttribute("id", "countries-autocomplete");
-        countriesAutocomplete.setAttribute("style", "top: " + autocompleteTop  + "px; left: " + autocompleteLeft  + "px;");
-
         var countryCodeValue = document.createElement("input");
         countryCodeValue.setAttribute("type", "hidden");
         countryCodeValue.setAttribute("id", "country-code");
@@ -277,6 +296,11 @@ Authy.UI = function() {
 
         countriesSelect.parentNode.insertBefore(countriesInput, countriesSelect);
         countriesSelect.parentNode.appendChild(countryCodeValue);
+
+        var pos = absolutePosFor(countriesInput);
+
+        countriesAutocomplete.setAttribute("id", "countries-autocomplete");
+        countriesAutocomplete.setAttribute("style", "width: "+(countriesInput.offsetWidth-5)+"px; top: " + (pos[0]+27)  + "px; left: " + pos[1]  + "px;");
     };
 
     // Public Members
