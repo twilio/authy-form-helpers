@@ -179,6 +179,7 @@ Authy.UI = function() {
     var processKey13 = function() {
         var obj = document.getElementById('countries-autocomplete').getElementsByClassName('active')[0];
         self.autocomplete(obj);
+        return false;
     }
 
     var setupEvents = function() {
@@ -196,8 +197,8 @@ Authy.UI = function() {
 
             switch(keyID) {
                 case 13:
-                    if(processKey13() == false)
-                        return false;
+                    processKey13();
+                    return false;
                 break;
                 case 40:
                     if(processKey40() == false)
@@ -210,6 +211,13 @@ Authy.UI = function() {
             }
 
             self.searchItem();
+        };
+
+        countriesInput.onkeypress = function(event) {
+          if(event.keyCode == 13) {
+              processKey13();
+              return false;
+          }
         };
 
         document.getElementById('countries-autocomplete').onclick = function(e){
