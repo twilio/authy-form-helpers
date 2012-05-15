@@ -273,12 +273,14 @@ Authy.UI = function() {
         }
 
         countriesSelect.setAttribute("style", "display:none");
+        var name = countriesSelect.getAttribute("name");
+        countriesSelect.removeAttribute("name");
 
         var countriesAutocomplete = document.createElement("div");
         var countryCodeValue = document.createElement("input");
         countryCodeValue.setAttribute("type", "hidden");
         countryCodeValue.setAttribute("id", "country-code");
-        countryCodeValue.setAttribute("name", "authy-country-code");
+        countryCodeValue.setAttribute("name", name);
 
         var classActive = '';
 
