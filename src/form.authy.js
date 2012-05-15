@@ -298,6 +298,7 @@ Authy.UI = function() {
         var countriesInput = document.createElement("input");
         countriesInput.setAttribute("id", "countries-input");
         countriesInput.setAttribute("type", "text");
+        countriesInput.setAttribute("autocomplete", "off");
 
         countriesSelect.parentNode.insertBefore(countriesInput, countriesSelect);
         countriesSelect.parentNode.appendChild(countryCodeValue);
