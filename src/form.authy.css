@@ -42,13 +42,18 @@
 #authy-tooltip {
   position: absolute;
   z-index: 999999;
-  border: 2px solid #ccc;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
+  border: 1px solid #ccc;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  border-radius: 6px;
   padding: 10px;
   background-color: #fff;
   display: none;
+  width: 330px;
+}
+
+#authy-tooltip p {
+  color: #444;
 }
 
 #countries-autocomplete {

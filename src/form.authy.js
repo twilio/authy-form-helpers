@@ -3,6 +3,9 @@ var Authy = {};
 Authy.UI = function() {
     // Attributes
     var self = this;
+    var tooltipTitle = "Authy Help";
+    var tooltipMessage = 'This token is only needed if you setup Authy to protect your account. Learn more <a href="https://authy.com/help">here</a>';
+
     var countriesList = [
       {"code":"US","name":"United States","call_code":"1"},{"code":"CA","name":"Canada","call_code":"1"},
       {"code":"UM","name":"United States Minor Outlying Islands","call_code":"1"},{"code":"BS","name":"Bahamas","call_code":"1 242"},
@@ -135,10 +138,16 @@ Authy.UI = function() {
 
         var tooltip = document.createElement("div");
         tooltip.setAttribute("id", "authy-tooltip");
-        var tooltipTop = document.getElementById('authy-help').offsetTop + 20;
-        var tooltipLeft = document.getElementById('authy-help').offsetLeft + 20;
+
+        var pos = absolutePosFor(authy_help);
+
+        var tooltipTop = pos[0];
+        var tooltipLeft = pos[1]+10;
+
+
+
         tooltip.setAttribute("style", "top:" + tooltipTop + "px;left:" + tooltipLeft + "px;");
-        tooltip.innerHTML = "<a id=\"authy-tooltip-close\"></a><h3>tooltip text</h3> <p>lorem isprum dolor</p>";
+        tooltip.innerHTML = '<a id="authy-tooltip-close"></a><h3 class="tooltip-title">'+tooltipTitle+'</h3><p class="tooltip-content">'+tooltipMessage+'</p>';
         document.body.appendChild(tooltip);
         document.getElementById('authy-help').onclick = function(){ document.getElementById("authy-tooltip").style.display = "block"; };
         document.getElementById('authy-tooltip-close').onclick = function(){ document.getElementById("authy-tooltip").style.display = "none"; };
@@ -249,7 +258,7 @@ Authy.UI = function() {
     };
 
     var buildItem = function(classActive, country) {
-        return '<li class="' + classActive + '" onclick="authyUi.autocomplete(this);return false;" rel="' + country.call_code + '" data-name="' + country.name + '"'+ '>'+
+        return '<li class="' + classActive + '" onclick="Authy.UI.instance().autocomplete(this);return false;" rel="' + country.call_code + '" data-name="' + country.name + '"'+ '>'+
                '<span class="aflag flag_' + country.code.toLowerCase() + '"></span> '+
                ' <span>(+'+ country.call_code + ') ' + country.name + '</span></li>';
     }
@@ -355,9 +364,25 @@ Authy.UI = function() {
 
         document.getElementById('country-code').value = obj.getAttribute('rel');
     }
+
+    this.setTooltip = function(title, msg) {
+        var tooltip = document.getElementById("authy-tooltip");
+        if(!tooltip) return;
+
+        tooltip.getElementsByClassName("tooltip-title")[0].innerHTML = title;
+        tooltip.getElementsByClassName("tooltip-content")[0].innerHTML = msg;
+    }
 };
 
+Authy.UI.instance = function() {
+    if(!this.ui){
+        this.ui = new Authy.UI();
+        this.ui.init();
+    }
+
+    return this.ui;
+}
+
 window.onload = function() {
-    authyUi = new Authy.UI();
-    authyUi.init();
+    Authy.UI.instance();
 }
