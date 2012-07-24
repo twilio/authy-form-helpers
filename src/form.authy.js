@@ -162,6 +162,11 @@ Authy.UI = function() {
             document.getElementById('countries-autocomplete').style.display = "block";
         }
 
+        // when it loses focus hide the list
+        countriesInput.onblur = function() {
+            document.getElementById('countries-autocomplete').style.display = "none";
+        }
+
         countriesInput.onkeyup = function(event) {
             document.getElementById('countries-autocomplete').style.display = "block";
             var keyID = event.keyCode;
