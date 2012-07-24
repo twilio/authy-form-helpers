@@ -305,14 +305,20 @@ Authy.UI = function() {
         var countriesAutocompleteHTML = '<ul>';
         var ok = false;
 
-        str = str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-        var reg = new RegExp(str, "g");
+        str = str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"); // Escape regular expression special characters
+
+        var reg = new RegExp("^"+str, "i");
         for( var i=0; i < countriesList.length; i++){
-            var country = countriesList[i];
-            if(country.country.toLowerCase().match(reg)) {
-                countriesAutocompleteHTML += buildItem(classActive, country);
-                classActive = '';
-                ok = true;
+            var countryItem = countriesList[i];
+            var countryWords = countryItem.country.toLowerCase().split(/\s+/);
+            // Capture words starting with the entered pattern
+            for(var cw = 0; cw < countryWords.length; cw++) {
+                if(countryWords[cw].length > 2 && countryWords[cw].match(reg)) {
+                    countriesAutocompleteHTML += buildItem(classActive, countryItem);
+                    classActive = '';
+                    ok = true;
+                    break;
+                }
             }
         }
         countriesAutocompleteHTML += '</ul>';
