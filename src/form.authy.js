@@ -1,21 +1,22 @@
 var Authy = {};
 
+// Fix Internet Explorer by defining getElementsByClassName
 if(document.getElementsByClassName == null) {
     document.getElementsByClassName = function(className, parentElement) {
-        if (Prototype.BrowserFeatures.XPath) {
-            var q = ".//*[contains(concat(' ', @class, ' '), ' " + className + " ')]";
-            return document._getElementsByXPath(q, parentElement);
-        } else {
-            var children = ($(parentElement) || document.body).getElementsByTagName('*');
-            var elements = [],
-                child;
-            for (var i = 0, length = children.length; i < length; i++) {
-                child = children[i];
-                if (Element.hasClassName(child, className)) elements.push(Element.extend(child));
+        var children = (parentElement || document.body).getElementsByTagName('*');
+        var elements = [], child;
+        for (var i = 0, length = children.length; i < length; i++) {
+            child = children[i];
+            if ((' '+child.className+' ').indexOf(' '+className+' ') != -1){
+                elements.push(child);
             }
-            return elements;
         }
+        return elements;
     };
+
+    HTMLDivElement.prototype.getElementsByClassName = function(className) {
+        return document.getElementsByClassName(className, this);
+    }
 };
 
 Authy.UI = function() {
@@ -167,6 +168,7 @@ Authy.UI = function() {
 
     var processKey13 = function() {
         var obj = document.getElementById('countries-autocomplete').getElementsByClassName('active')[0];
+
         self.autocomplete(obj);
         return false;
     }
