@@ -1,14 +1,14 @@
-#countries-autocomplete {
+.countries-autocomplete {
   background-color: #fff;
   border: 2px solid #ccc;
 }
 
-#countries-autocomplete ul {
+.countries-autocomplete ul {
   margin: 0px;
   padding: 0px;
 }
 
-#countries-autocomplete li {
+.countries-autocomplete li {
   list-style-type:none;
   border-bottom: 1px solid #ccc;
   padding: 5px 10px;
@@ -16,8 +16,8 @@
   font-family: arial;
 }
 
-#countries-autocomplete li:hover,
-#countries-autocomplete li.active {
+.countries-autocomplete li:hover,
+.countries-autocomplete li.active {
   cursor: pointer;
   background-color: #ccc;
 }
@@ -56,7 +56,7 @@
   color: #444;
 }
 
-#countries-autocomplete {
+.countries-autocomplete {
   position: absolute;
   width: 200px;
   display: none;
@@ -65,7 +65,7 @@
   z-index: 99999999;
 }
 
-#countries-input,
+.countries-input,
 #authy-cellphone {
   border: 1px solid #ccc;
   color: #333;

@@ -23,7 +23,7 @@ Authy.UI = function() {
     // Attributes
     var self = this;
     var tooltipTitle = "Authy Help";
-    var tooltipMessage = 'This token is only needed if you setup Authy to protect your account. Learn more <a href="https://authy.com/help">here</a>';
+    var tooltipMessage = 'This token is only needed if you setup Authy to protect your account. Learn more <a href="https://www.authy.com/help">here</a>';
 
     var countriesList = [
         {"country":"United States of America","code":"1"},{"country":"Canada","code":"1"},{"country":"Russia","code":"7"},{"country":"Kazakhstan","code":"7"},
@@ -134,95 +134,95 @@ Authy.UI = function() {
         document.getElementById('authy-tooltip-close').onclick = function(){ document.getElementById("authy-tooltip").style.display = "none"; };
     };
 
-    var processKey40 = function() {
-        var countriesArr = document.getElementById('countries-autocomplete').getElementsByTagName('li');
+    var processKey40 = function(listId) {
+        var caId = 'countries-autocomplete-'+listId;
+        var countriesArr = document.getElementById(caId).getElementsByTagName('li');
         for(var i=0; i<countriesArr.length; i++){
-            if(document.getElementById('countries-autocomplete').getElementsByTagName('li')[i].className == 'active'){
-                document.getElementById('countries-autocomplete').getElementsByTagName('li')[i].className = '';
+            if(document.getElementById(caId).getElementsByTagName('li')[i].className == 'active'){
+                document.getElementById(caId).getElementsByTagName('li')[i].className = '';
                 if((i+1) == countriesArr.length){
-                    document.getElementById('countries-autocomplete').getElementsByTagName('li')[0].className = 'active';
+                    document.getElementById(caId).getElementsByTagName('li')[0].className = 'active';
                 } else {
-                    document.getElementById('countries-autocomplete').getElementsByTagName('li')[i+1].className = 'active';
+                    document.getElementById(caId).getElementsByTagName('li')[i+1].className = 'active';
                 }
                 return false;
             }
         }
-        document.getElementById('countries-autocomplete').getElementsByTagName('li')[0].setAttribute('class', 'active');
+        document.getElementById(caId).getElementsByTagName('li')[0].setAttribute('class', 'active');
     };
 
-    var processKey38 = function() {
-        var countriesArr = document.getElementById('countries-autocomplete').getElementsByTagName('li');
+    var processKey38 = function(listId) {
+        var caId = 'countries-autocomplete-'+listId;
+        var countriesArr = document.getElementById(caId).getElementsByTagName('li');
         for(var i=countriesArr.length-1; i>=0; i--){
-            if(document.getElementById('countries-autocomplete').getElementsByTagName('li')[i].className == 'active'){
-                document.getElementById('countries-autocomplete').getElementsByTagName('li')[i].className = '';
+            if(document.getElementById(caId).getElementsByTagName('li')[i].className == 'active'){
+                document.getElementById(caId).getElementsByTagName('li')[i].className = '';
                 if(i == 0){
-                    document.getElementById('countries-autocomplete').getElementsByTagName('li')[countriesArr.length-1].className = 'active';
+                    document.getElementById(caId).getElementsByTagName('li')[countriesArr.length-1].className = 'active';
                 } else {
-                    document.getElementById('countries-autocomplete').getElementsByTagName('li')[i-1].className = 'active';
+                    document.getElementById(caId).getElementsByTagName('li')[i-1].className = 'active';
                 }
                 return false;
             }
         }
-        document.getElementById('countries-autocomplete').getElementsByTagName('li')[0].setAttribute('class', 'active');
+        document.getElementById(caId).getElementsByTagName('li')[0].setAttribute('class', 'active');
     }
 
-    var processKey13 = function() {
-        var obj = document.getElementById('countries-autocomplete').getElementsByClassName('active')[0];
+    var processKey13 = function(listId) {
+        var obj = document.getElementById('countries-autocomplete-'+listId).getElementsByClassName('active')[0];
 
         self.autocomplete(obj);
         return false;
     }
 
-    var setupEvents = function() {
-        var countriesInput = document.getElementById('countries-input');
-
+    var setupEvents = function(countriesInput, listId) {
         if(!countriesInput) return;
 
         countriesInput.onfocus = function() {
-            document.getElementById('countries-autocomplete').style.display = "block";
+            document.getElementById('countries-autocomplete-'+listId).style.display = "block";
         }
 
         // when it loses focus hide the list
         countriesInput.onblur = function() {
             // defer this call so click events can be processed
             setTimeout(function() {
-              document.getElementById('countries-autocomplete').style.display = "none";
+              document.getElementById('countries-autocomplete-'+listId).style.display = "none";
             }, 200);
         }
 
         countriesInput.onkeyup = function(event) {
-            document.getElementById('countries-autocomplete').style.display = "block";
+            document.getElementById('countries-autocomplete-'+listId).style.display = "block";
             var keyID = window.event.keyCode; // IE
 
             switch(keyID) {
                 case 13:
                     // enter
-                    processKey13();
+                    processKey13(listId);
                     return false;
                 break;
                 case 40:
                     // down key
-                    if(processKey40() == false)
+                    if(processKey40(listId) == false)
                         return false;
                 break;
                 case 38:
                     // up key
-                    if(processKey38() == false)
+                    if(processKey38(listId) == false)
                         return false;
                 break;
             }
 
-            self.searchItem();
+            self.searchItem(listId);
         };
 
         countriesInput.onkeypress = function(event) {
           if(window.event.keyCode == 13) {
-              processKey13(); // Enter key
+              processKey13(listId); // Enter key
               return false;
           }
         };
 
-        document.getElementById('countries-autocomplete').onclick = function(e){
+        document.getElementById('countries-autocomplete-'+listId).onclick = function(e){
             if(e && e.stopPropagation) {
                 e.stopPropagation();
             } else {
@@ -231,7 +231,7 @@ Authy.UI = function() {
             }
         }
 
-        document.getElementById('countries-input').onclick = function(e){
+        document.getElementById('countries-input-'+listId).onclick = function(e){
             if(e && e.stopPropagation) {
                 e.stopPropagation();
 
@@ -244,15 +244,15 @@ Authy.UI = function() {
         }
 
         document.onclick = function() {
-            document.getElementById('countries-autocomplete').style.display = "none";
+            document.getElementById('countries-autocomplete-'+listId).style.display = "none";
         }
 
 
     };
 
-    var buildItem = function(classActive, country) {
+    var buildItem = function(classActive, country, listId) {
         var cc = country.country.substring(0,2).toLowerCase()+country.code;
-        return '<li class="' + classActive + '" onclick="Authy.UI.instance().autocomplete(this);return false;" rel="' + country.code + '" data-name="' + country.country + '"'+ '>'+
+        return '<li class="' + classActive + '" onclick="Authy.UI.instance().autocomplete(this);return false;" data-list-id="'+listId+'" rel="' + country.code + '" data-name="' + country.country + '"'+ '>'+
                '<span class="aflag flag_' + cc + '"></span> '+
                ' <span>(+'+ country.code + ') ' + country.country + '</span></li>';
     }
@@ -270,17 +270,17 @@ Authy.UI = function() {
         return [absTop, absLeft];
     }
 
-    var setupCountriesDropdown = function() {
-        var countriesSelect = document.getElementById("authy-countries");
+    var setupCountriesDropdown = function(countriesSelect, listId) {
+        if(!countriesSelect) {
+          return;
+        }
 
-        if(!countriesSelect) return;
-
-        self.countries = [];
+        var countries = [];
         for( var i=0; i < countriesSelect.getElementsByTagName("option").length; i++){
             var buf = [];
             buf[0] = countriesSelect.getElementsByTagName("option")[i].value;
             buf[1] = countriesSelect.getElementsByTagName("option")[i].innerHTML;
-            self.countries.push(buf);
+            countries.push(buf);
         }
 
         countriesSelect.setAttribute("style", "display:none");
@@ -290,7 +290,7 @@ Authy.UI = function() {
         var countriesAutocomplete = document.createElement("div");
         var countryCodeValue = document.createElement("input");
         countryCodeValue.setAttribute("type", "hidden");
-        countryCodeValue.setAttribute("id", "country-code");
+        countryCodeValue.setAttribute("id", "country-code-"+listId);
         countryCodeValue.setAttribute("name", name);
 
         var classActive = '';
@@ -299,7 +299,7 @@ Authy.UI = function() {
 
         for( var i=0; i < countriesList.length; i++){
             classActive = (i == 0) ? 'active' : '';
-            countriesAutocompleteHTML += buildItem(classActive, countriesList[i]);
+            countriesAutocompleteHTML += buildItem(classActive, countriesList[i], listId);
         }
         countriesAutocompleteHTML += '</ul>';
         countriesAutocomplete.innerHTML = countriesAutocompleteHTML;
@@ -307,7 +307,8 @@ Authy.UI = function() {
         document.body.appendChild(countriesAutocomplete);
 
         var countriesInput = document.createElement("input");
-        countriesInput.setAttribute("id", "countries-input");
+        countriesInput.setAttribute("id", "countries-input-"+listId);
+        countriesInput.setAttribute("class", "countries-input")
         countriesInput.setAttribute("type", "text");
         countriesInput.setAttribute("autocomplete", "off");
 
@@ -316,22 +317,35 @@ Authy.UI = function() {
 
         var pos = absolutePosFor(countriesInput);
 
-        countriesAutocomplete.setAttribute("id", "countries-autocomplete");
+        countriesAutocomplete.setAttribute("id", "countries-autocomplete-"+listId);
+        countriesAutocomplete.setAttribute("class", "countries-autocomplete");
         countriesAutocomplete.setAttribute("style", "width: "+(countriesInput.offsetWidth-5)+"px; top: " + (pos[0]+27)  + "px; left: " + pos[1]  + "px;");
+
+        setupEvents(countriesInput, listId)
+    }
+
+    var findAndSetupCountries = function() {
+        setupCountriesDropdown(document.getElementById("authy-countries"), 0);
+        var countries = document.getElementsByClassName("authy-countries");
+
+        for(var i = 0; i < countries.length; i++) {
+          setupCountriesDropdown(countries[i], i+1);
+        }
     };
+
+
 
     // Public Members
     this.init = function() {
         setupAuthyToken();
         setupTooltip();
-        setupCountriesDropdown();
-        setupEvents();
+        findAndSetupCountries();
         setupCellphoneValidation();
     }
 
-    this.searchItem = function() {
+    this.searchItem = function(listId) {
         var classActive = 'active';
-        var countriesInput = document.getElementById('countries-input');
+        var countriesInput = document.getElementById('countries-input-'+listId);
         var str = countriesInput.value;
         var countriesAutocompleteHTML = '<ul>';
         var ok = false;
@@ -345,7 +359,7 @@ Authy.UI = function() {
             // Capture words starting with the entered pattern
             for(var cw = 0; cw < countryWords.length; cw++) {
                 if(countryWords[cw].length > 2 && countryWords[cw].match(reg)) {
-                    countriesAutocompleteHTML += buildItem(classActive, countryItem);
+                    countriesAutocompleteHTML += buildItem(classActive, countryItem, listId);
                     classActive = '';
                     ok = true;
                     break;
@@ -354,15 +368,16 @@ Authy.UI = function() {
         }
         countriesAutocompleteHTML += '</ul>';
         if(ok) {
-            document.getElementById('countries-autocomplete').innerHTML = countriesAutocompleteHTML;
+            document.getElementById('countries-autocomplete-'+listId).innerHTML = countriesAutocompleteHTML;
         }
     }
 
     this.autocomplete = function(obj) {
-        document.getElementById('countries-input').value = obj.getAttribute("data-name");
-        document.getElementById('countries-autocomplete').style.display = "none";
+        var listId = obj.getAttribute("data-list-id");
+        document.getElementById('countries-input-'+listId).value = obj.getAttribute("data-name");
+        document.getElementById('countries-autocomplete-'+listId).style.display = "none";
 
-        document.getElementById('country-code').value = obj.getAttribute('rel');
+        document.getElementById('country-code-'+listId).value = obj.getAttribute('rel');
     }
 
     this.setTooltip = function(title, msg) {
