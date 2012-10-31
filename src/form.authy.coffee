@@ -1,4 +1,4 @@
-Authy = {}
+window.Authy = {}
 
 # Fix Internet Explorer by defining getElementsByClassName
 unless document.getElementsByClassName?
@@ -18,13 +18,12 @@ unless document.getElementsByClassName?
   HTMLDivElement::getElementsByClassName = (className) ->
     return document.getElementsByClassName className, this
 
-Authy.UI = ->
+window.Authy.UI = ->
   
   # Attributes
   self = this
   tooltipTitle = "Authy Help Tooltip"
   tooltipMessage = "This is a help tooltip for your users. You can set the message by doing: authyUI.setTooltip(\"title\", \"message\");"
-
 
   countriesList = [
         {"country":"United States of America","code":"1"},{"country":"Canada","code":"1"},{"country":"Russia","code":"7"},{"country":"Kazakhstan","code":"7"},
@@ -189,7 +188,9 @@ Authy.UI = ->
     return  unless countriesInput
 
     countriesInput.onfocus = ->
-      document.getElementById("countries-autocomplete-" + listId).style.display = "block"
+      countriesDropdown = document.getElementById("countries-autocomplete-" + listId)
+      setupCountriesDropdownPosition(countriesInput, countriesDropdown )
+      countriesDropdown.style.display = "block"
 
     # when it loses focus hide the list
     countriesInput.onblur = ->
@@ -279,11 +280,13 @@ Authy.UI = ->
     countriesSelect.setAttribute "style", "display:none"
     name = countriesSelect.getAttribute("name")
     countriesSelect.removeAttribute "name"
-    countriesAutocomplete = document.createElement("div")
+
+    countriesDropdown = document.createElement("div")
     countryCodeValue = document.createElement("input")
     countryCodeValue.setAttribute "type", "hidden"
     countryCodeValue.setAttribute "id", "country-code-" + listId
     countryCodeValue.setAttribute "name", name
+
     classActive = ""
     countriesAutocompleteHTML = "<ul>"
     i = 0
@@ -294,20 +297,39 @@ Authy.UI = ->
       i++
 
     countriesAutocompleteHTML += "</ul>"
-    countriesAutocomplete.innerHTML = countriesAutocompleteHTML
-    document.body.appendChild countriesAutocomplete
+    countriesDropdown.innerHTML = countriesAutocompleteHTML
+    document.body.appendChild countriesDropdown
+  
     countriesInput = document.createElement("input")
     countriesInput.setAttribute "id", "countries-input-" + listId
     countriesInput.setAttribute "class", "countries-input"
     countriesInput.setAttribute "type", "text"
     countriesInput.setAttribute "autocomplete", "off"
+
     countriesSelect.parentNode.insertBefore countriesInput, countriesSelect
     countriesSelect.parentNode.appendChild countryCodeValue
-    pos = absolutePosFor(countriesInput)
-    countriesAutocomplete.setAttribute "id", "countries-autocomplete-" + listId
-    countriesAutocomplete.setAttribute "class", "countries-autocomplete"
-    countriesAutocomplete.setAttribute "style", "width: " + (countriesInput.offsetWidth - 5) + "px; top: " + (pos[0] + 27) + "px; left: " + pos[1] + "px;"
+
+    countriesDropdown.setAttribute "id", "countries-autocomplete-" + listId
+    countriesDropdown.setAttribute "class", "countries-autocomplete"
+    
+    setupCountriesDropdownPosition(countriesInput, countriesDropdown)
+
     setupEvents countriesInput, listId
+    return
+
+  #
+  # Calculates the country dropdown position based on the countriesInput
+  #
+  setupCountriesDropdownPosition = (countriesInput, countriesDropdown) ->
+    pos = absolutePosFor(countriesInput)
+
+    width = countriesInput.offsetWidth
+    if width < 220
+      width = 220
+    countriesDropdown.setAttribute "style", "width: " + (width - 5) + "px; top: " + (pos[0] + 22) + "px; left: " + (pos[1] - 2) + "px;"
+
+
+
 
   #
   # If there are multiple countries dropdows, finds each one and sets a countries Dropdown
@@ -366,13 +388,16 @@ Authy.UI = ->
     document.getElementById("countries-input-" + listId).value = obj.getAttribute("data-name")
     document.getElementById("countries-autocomplete-" + listId).style.display = "none"
     document.getElementById("country-code-" + listId).value = obj.getAttribute("rel")
+    return
 
   @setTooltip = (title, msg) ->
     tooltip = document.getElementById("authy-tooltip")
     return  unless tooltip
     tooltip.getElementsByClassName("tooltip-title")[0].innerHTML = title
     tooltip.getElementsByClassName("tooltip-content")[0].innerHTML = msg
-
+    return
+  
+  return #class return
 Authy.UI.instance = ->
   unless @ui
     @ui = new Authy.UI()
