@@ -1,25 +1,42 @@
-namespace :css do
+namespace :coffee do
+
   desc "Compile"
   task :compile do
-    case RUBY_PLATFORM
-    when /linux/
-      command = 'yui-compressor'
-    else
-      command = 'yuicompressor'
-    end
-    system "cat src/flags.authy.css src/form.authy.css | #{command} --type css -o src/form.authy.min.css"
+    require 'coffee-script'
+    puts "Compiling Coffeescript"
+
+    js = CoffeeScript.compile File.read("#{Dir.pwd}/src/form.authy.coffee")
+    File.open("#{Dir.pwd}/src/form.authy.js", 'w') { |file| file.write(js) }
+  end
+end
+namespace :css do
+  desc "Compile"
+  task :compress do
+    puts "Compressing css"
+    require "yui/compressor"
+    css = File.read("#{Dir.pwd}/src/flags.authy.css")
+    css += "\n"
+    css += File.read("#{Dir.pwd}/src/form.authy.css")
+
+    compressor = YUI::CssCompressor.new
+    min_css =  compressor.compress(css)
+    File.open("#{Dir.pwd}/src/form.authy.min.css", 'w') { |file| file.write(min_css) }
   end
 end
 
 
 namespace :js do
   desc "Compile"
-  task :compile do
-    system "cat src/form.authy.js | yuicompressor --type js -o src/form.authy.min.js"
+  task :compress do
+    puts "Compressing javascript"
+    js = File.read("#{Dir.pwd}/src/form.authy.js")
+    compressor = YUI::JavaScriptCompressor.new
+    min_js = compressor.compress(js)
+    File.open("#{Dir.pwd}/src/form.authy.min.js", 'w') { |file| file.write(min_js) }
   end
 end
 
-task :compile => ["css:compile", "js:compile"] do
+task :compile => ["coffee:compile","css:compress", "js:compress"] do
 end
 
 task :package => ["compile"] do
