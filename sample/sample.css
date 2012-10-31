@@ -1,0 +1,10 @@
+.login-form { 
+  margin-top: 10em;
+  text-align: center;
+  line-height: 2em;
+
+}
+
+.login-form input {
+  width: 180px;
+}
