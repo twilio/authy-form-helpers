@@ -845,7 +845,7 @@
     buildItem = function(classActive, country, listId) {
       var cc;
       cc = country.country.substring(0, 2).toLowerCase() + country.code;
-      return "<li class=\"" + classActive + "\" onclick=\"Authy.UI.instance().autocomplete(this);return false;\" data-list-id=\"" + listId + "\" rel=\"" + country.code + "\" data-name=\"" + country.country + "\"" + ">" + "<span class=\"aflag flag_" + cc + "\"></span> " + " <span>(+" + country.code + ") " + country.country + "</span></li>";
+      return "<li class=\"" + classActive + "\" onclick=\"Authy.UI.instance().autocomplete(this);return false;\" data-list-id=\"" + listId + "\" rel=\"" + country.code + "\" data-name=\"" + country.country + "\"" + ">" + "<span class=\"aflag flag-" + cc + "\"></span> " + " <span>(+" + country.code + ") " + country.country + "</span></li>";
     };
     absolutePosFor = function(element) {
       var absLeft, absTop;
