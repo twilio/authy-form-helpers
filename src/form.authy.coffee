@@ -119,19 +119,28 @@ window.Authy.UI = ->
     return  unless authy_help
     tooltip = document.createElement("div")
     tooltip.setAttribute "id", "authy-tooltip"
-    pos = absolutePosFor(authy_help)
-    tooltipTop = pos[0]
-    tooltipLeft = pos[1] + 10
-    tooltip.setAttribute "style", "top:" + tooltipTop + "px;left:" + tooltipLeft + "px;"
     tooltip.innerHTML = "<a id=\"authy-tooltip-close\"></a><h3 class=\"tooltip-title\">" + tooltipTitle + "</h3><p class=\"tooltip-content\">" + tooltipMessage + "</p>"
     document.body.appendChild tooltip
+
     document.getElementById("authy-help").onclick = ->
-      document.getElementById("authy-tooltip").style.display = "block"
+      #reposition the tooltip
+      tooltip = document.getElementById("authy-tooltip")
+      setupTooltipPosition(this, tooltip)
+      tooltip.style.display = "block"
 
     document.getElementById("authy-tooltip-close").onclick = ->
       document.getElementById("authy-tooltip").style.display = "none"
+    
+    setupTooltipPosition(authy_help, tooltip)
 
     return  
+
+  setupTooltipPosition = (helpLink, tooltip) -> 
+    pos = absolutePosFor(helpLink)
+    tooltipTop = pos[0] + 3
+    tooltipLeft = pos[1] + 30
+    tooltip.setAttribute "style", "top:" + tooltipTop + "px;left:" + tooltipLeft + "px;"
+
 
   # Process the down-arrow key
   processKey40 = (listId) ->

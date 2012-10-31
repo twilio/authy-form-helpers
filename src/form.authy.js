@@ -25,7 +25,7 @@
   }
 
   window.Authy.UI = function() {
-    var absolutePosFor, buildItem, countriesList, findAndSetupCountries, processKey13, processKey38, processKey40, self, setupAuthyTokenValidation, setupCellphoneValidation, setupCountriesDropdown, setupCountriesDropdownPosition, setupEvents, setupTooltip, tooltipMessage, tooltipTitle;
+    var absolutePosFor, buildItem, countriesList, findAndSetupCountries, processKey13, processKey38, processKey40, self, setupAuthyTokenValidation, setupCellphoneValidation, setupCountriesDropdown, setupCountriesDropdownPosition, setupEvents, setupTooltip, setupTooltipPosition, tooltipMessage, tooltipTitle;
     self = this;
     tooltipTitle = "Authy Help Tooltip";
     tooltipMessage = "This is a help tooltip for your users. You can set the message by doing: authyUI.setTooltip(\"title\", \"message\");";
@@ -709,25 +709,31 @@
       };
     };
     setupTooltip = function() {
-      var authy_help, pos, tooltip, tooltipLeft, tooltipTop;
+      var authy_help, tooltip;
       authy_help = document.getElementById("authy-help");
       if (!authy_help) {
         return;
       }
       tooltip = document.createElement("div");
       tooltip.setAttribute("id", "authy-tooltip");
-      pos = absolutePosFor(authy_help);
-      tooltipTop = pos[0];
-      tooltipLeft = pos[1] + 10;
-      tooltip.setAttribute("style", "top:" + tooltipTop + "px;left:" + tooltipLeft + "px;");
       tooltip.innerHTML = "<a id=\"authy-tooltip-close\"></a><h3 class=\"tooltip-title\">" + tooltipTitle + "</h3><p class=\"tooltip-content\">" + tooltipMessage + "</p>";
       document.body.appendChild(tooltip);
       document.getElementById("authy-help").onclick = function() {
-        return document.getElementById("authy-tooltip").style.display = "block";
+        tooltip = document.getElementById("authy-tooltip");
+        setupTooltipPosition(this, tooltip);
+        return tooltip.style.display = "block";
       };
       document.getElementById("authy-tooltip-close").onclick = function() {
         return document.getElementById("authy-tooltip").style.display = "none";
       };
+      setupTooltipPosition(authy_help, tooltip);
+    };
+    setupTooltipPosition = function(helpLink, tooltip) {
+      var pos, tooltipLeft, tooltipTop;
+      pos = absolutePosFor(helpLink);
+      tooltipTop = pos[0] + 3;
+      tooltipLeft = pos[1] + 30;
+      return tooltip.setAttribute("style", "top:" + tooltipTop + "px;left:" + tooltipLeft + "px;");
     };
     processKey40 = function(listId) {
       var caId, countriesArr, i;
