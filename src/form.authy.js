@@ -848,7 +848,7 @@
     };
     absolutePosFor = function(element) {
       var absLeft, absTop;
-      absTop = element.offsetHeight;
+      absTop = 0;
       absLeft = 0;
       while (element) {
         absTop += element.offsetTop;
@@ -909,7 +909,7 @@
       if (width < 220) {
         width = 220;
       }
-      return countriesDropdown.setAttribute("style", "width: " + (width - 5) + "px; top: " + (pos[0] + 2) + "px; left: " + (pos[1] - 2) + "px;");
+      return countriesDropdown.setAttribute("style", "width: " + (width - 5) + "px; top: " + (pos[0] + 2 + countriesInput.offsetHeight) + "px; left: " + (pos[1] - 2) + "px;");
     };
     findAndSetupCountries = function() {
       var countries, i;

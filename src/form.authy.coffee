@@ -135,6 +135,9 @@ window.Authy.UI = ->
 
     return  
 
+  #
+  # Set the tooltip position
+  #
   setupTooltipPosition = (helpLink, tooltip) -> 
     pos = absolutePosFor(helpLink)
     tooltipTop = pos[0] + 3
@@ -260,7 +263,7 @@ window.Authy.UI = ->
   # Given an element returns it absolute position
   #
   absolutePosFor = (element) ->
-    absTop = element.offsetHeight
+    absTop = 0 
     absLeft = 0
     while element
       absTop += element.offsetTop
@@ -333,7 +336,7 @@ window.Authy.UI = ->
     width = countriesInput.offsetWidth 
     if width < 220
       width = 220
-    countriesDropdown.setAttribute "style", "width: " + (width - 5) + "px; top: " + (pos[0] + 2) + "px; left: " + (pos[1] - 2) + "px;"
+    countriesDropdown.setAttribute "style", "width: " + (width - 5) + "px; top: " + (pos[0] + 2 + countriesInput.offsetHeight) + "px; left: " + (pos[1] - 2) + "px;"
 
 
 
