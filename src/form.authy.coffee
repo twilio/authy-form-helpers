@@ -140,8 +140,8 @@ window.Authy.UI = ->
   #
   setupTooltipPosition = (helpLink, tooltip) -> 
     pos = absolutePosFor(helpLink)
-    tooltipTop = pos[0] + 3
-    tooltipLeft = pos[1] + 30
+    tooltipTop = pos[0] 
+    tooltipLeft = pos[1] + helpLink.offsetWidth + 5
     tooltip.setAttribute "style", "top:" + tooltipTop + "px;left:" + tooltipLeft + "px;"
 
 

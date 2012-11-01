@@ -731,8 +731,8 @@
     setupTooltipPosition = function(helpLink, tooltip) {
       var pos, tooltipLeft, tooltipTop;
       pos = absolutePosFor(helpLink);
-      tooltipTop = pos[0] + 3;
-      tooltipLeft = pos[1] + 30;
+      tooltipTop = pos[0];
+      tooltipLeft = pos[1] + helpLink.offsetWidth + 5;
       return tooltip.setAttribute("style", "top:" + tooltipTop + "px;left:" + tooltipLeft + "px;");
     };
     processKey40 = function(listId) {

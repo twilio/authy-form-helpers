@@ -1,3 +1,4 @@
+
 .countries-autocomplete {
   background-color: #fff;
   border: 1px solid #ccc;
@@ -24,7 +25,7 @@
 #authy-tooltip-close {
   position: absolute;
   top: 5px;
-  right: 5px;
+  left: 7px;
   cursor: pointer;
   width: 11px;
   height: 11px;
@@ -45,7 +46,7 @@
   -moz-border-radius: 6px;
   -webkit-border-radius: 6px;
   border-radius: 6px;
-  padding: 10px;
+  padding: 15px 10px 10px 10px;
   background-color: #fff;
   display: none;
   width: 330px;
