@@ -145,21 +145,19 @@ window.Authy.UI = ->
   # Process the down-arrow key
   processKey40 = (listId) ->
     caId = "countries-autocomplete-" + listId
-    countriesArr = document.getElementById(caId).getElementsByTagName("li")
-
+    countriesDropdown = document.getElementById(caId)
+    countriesArr =  countriesDropdown.getElementsByTagName("li")
+    
     i = 0
-    while i < countriesArr.length
-      if document.getElementById(caId).getElementsByTagName("li")[i].className == "active"
-        document.getElementById(caId).getElementsByTagName("li")[i].className = ""
-        if (i + 1) == countriesArr.length
-          document.getElementById(caId).getElementsByTagName("li")[0].className = "active"
-        else
-          document.getElementById(caId).getElementsByTagName("li")[i + 1].className = "active"
-        return false
+    for li in countriesArr #search all the array which is active and set the next one as active
+      if li.className == "active" && countriesArr.length > (i + 1)
+        selectedLi = countriesArr[i + 1]
+        selectedLi.className = "active"
+        li.className = ""
+        # countriesDropdown.scrollTo(0, selectedLi.offsetTop)
+        break
       i++
-    document.getElementById(caId).getElementsByTagName("li")[0].setAttribute "class", "active"
-
-    return
+    return false
 
   
   #process the up arrow key
@@ -210,7 +208,7 @@ window.Authy.UI = ->
 
     countriesInput.onkeyup = (event) ->
       document.getElementById("countries-autocomplete-" + listId).style.display = "block"
-      keyID = window.event.keyCode # IE
+      keyID = getKeyCode(event) 
       switch keyID
         when 13 # enter key
           processKey13(listId)
@@ -222,7 +220,7 @@ window.Authy.UI = ->
       self.searchItem listId
 
     countriesInput.onkeypress = (event) ->
-      if window.event.keyCode == 13
+      if getKeyCode(event) == 13
         processKey13(listId) # Enter key
         return false
 
@@ -352,6 +350,18 @@ window.Authy.UI = ->
       setupCountriesDropdown countries[i], i + 1
       i++
     return
+
+
+  getKeyCode = (event) ->
+    if event && event.which #others 
+      keyCode = event.which
+    else if window.event
+      keyCode = window.event.keyCode 
+    
+    return keyCode
+
+
+
 
   ###########
   # Public Members

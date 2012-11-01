@@ -25,7 +25,7 @@
   }
 
   window.Authy.UI = function() {
-    var absolutePosFor, buildItem, countriesList, findAndSetupCountries, processKey13, processKey38, processKey40, self, setupAuthyTokenValidation, setupCellphoneValidation, setupCountriesDropdown, setupCountriesDropdownPosition, setupEvents, setupTooltip, setupTooltipPosition, tooltipMessage, tooltipTitle;
+    var absolutePosFor, buildItem, countriesList, findAndSetupCountries, getKeyCode, processKey13, processKey38, processKey40, self, setupAuthyTokenValidation, setupCellphoneValidation, setupCountriesDropdown, setupCountriesDropdownPosition, setupEvents, setupTooltip, setupTooltipPosition, tooltipMessage, tooltipTitle;
     self = this;
     tooltipTitle = "Authy Help Tooltip";
     tooltipMessage = "This is a help tooltip for your users. You can set the message by doing: authyUI.setTooltip(\"title\", \"message\");";
@@ -736,23 +736,22 @@
       return tooltip.setAttribute("style", "top:" + tooltipTop + "px;left:" + tooltipLeft + "px;");
     };
     processKey40 = function(listId) {
-      var caId, countriesArr, i;
+      var caId, countriesArr, countriesDropdown, i, li, selectedLi, _i, _len;
       caId = "countries-autocomplete-" + listId;
-      countriesArr = document.getElementById(caId).getElementsByTagName("li");
+      countriesDropdown = document.getElementById(caId);
+      countriesArr = countriesDropdown.getElementsByTagName("li");
       i = 0;
-      while (i < countriesArr.length) {
-        if (document.getElementById(caId).getElementsByTagName("li")[i].className === "active") {
-          document.getElementById(caId).getElementsByTagName("li")[i].className = "";
-          if ((i + 1) === countriesArr.length) {
-            document.getElementById(caId).getElementsByTagName("li")[0].className = "active";
-          } else {
-            document.getElementById(caId).getElementsByTagName("li")[i + 1].className = "active";
-          }
-          return false;
+      for (_i = 0, _len = countriesArr.length; _i < _len; _i++) {
+        li = countriesArr[_i];
+        if (li.className === "active" && countriesArr.length > (i + 1)) {
+          selectedLi = countriesArr[i + 1];
+          selectedLi.className = "active";
+          li.className = "";
+          break;
         }
         i++;
       }
-      document.getElementById(caId).getElementsByTagName("li")[0].setAttribute("class", "active");
+      return false;
     };
     processKey38 = function(listId) {
       var caId, countriesArr, i;
@@ -797,7 +796,7 @@
       countriesInput.onkeyup = function(event) {
         var keyID;
         document.getElementById("countries-autocomplete-" + listId).style.display = "block";
-        keyID = window.event.keyCode;
+        keyID = getKeyCode(event);
         switch (keyID) {
           case 13:
             processKey13(listId);
@@ -815,7 +814,7 @@
         return self.searchItem(listId);
       };
       countriesInput.onkeypress = function(event) {
-        if (window.event.keyCode === 13) {
+        if (getKeyCode(event) === 13) {
           processKey13(listId);
           return false;
         }
@@ -921,6 +920,15 @@
         setupCountriesDropdown(countries[i], i + 1);
         i++;
       }
+    };
+    getKeyCode = function(event) {
+      var keyCode;
+      if (event && event.which) {
+        keyCode = event.which;
+      } else if (window.event) {
+        keyCode = window.event.keyCode;
+      }
+      return keyCode;
     };
     this.init = function() {
       setupAuthyTokenValidation();
