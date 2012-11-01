@@ -15,7 +15,6 @@ namespace :css do
     puts "Compressing css"
     require "yui/compressor"
     css = File.read("#{Dir.pwd}/src/flags.authy.css")
-    css += "\n"
     css += File.read("#{Dir.pwd}/src/form.authy.css")
 
     compressor = YUI::CssCompressor.new

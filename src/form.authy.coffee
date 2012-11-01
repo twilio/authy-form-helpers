@@ -249,7 +249,7 @@ window.Authy.UI = ->
 
 
   #
-  #Return #TODO
+  # Returns each country code <li> item
   #
   buildItem = (classActive, country, listId) ->
     cc = country.country.substring(0, 2).toLowerCase() + country.code
@@ -262,7 +262,7 @@ window.Authy.UI = ->
   # Given an element returns it absolute position
   #
   absolutePosFor = (element) ->
-    absTop = 0
+    absTop = element.offsetHeight
     absLeft = 0
     while element
       absTop += element.offsetTop
@@ -332,10 +332,10 @@ window.Authy.UI = ->
   setupCountriesDropdownPosition = (countriesInput, countriesDropdown) ->
     pos = absolutePosFor(countriesInput)
 
-    width = countriesInput.offsetWidth
+    width = countriesInput.offsetWidth 
     if width < 220
       width = 220
-    countriesDropdown.setAttribute "style", "width: " + (width - 5) + "px; top: " + (pos[0] + 22) + "px; left: " + (pos[1] - 2) + "px;"
+    countriesDropdown.setAttribute "style", "width: " + (width - 5) + "px; top: " + (pos[0] + 2) + "px; left: " + (pos[1] - 2) + "px;"
 
 
 
