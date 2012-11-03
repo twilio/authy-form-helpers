@@ -217,13 +217,6 @@ window.Authy.UI = ->
       setupCountriesDropdownPosition(countriesInput, countriesDropdown )
       countriesDropdown.style.display = "block"
 
-    # when it loses focus hide the list
-    countriesInput.onblur = ->
-      # defer this call so click events can be processed
-      setTimeout (->
-        document.getElementById("countries-autocomplete-" + listId).style.display = "none"
-      ), 200
-
     countriesInput.onkeyup = (event) ->
       document.getElementById("countries-autocomplete-" + listId).style.display = "block"
       keyID = getKeyCode(event) 

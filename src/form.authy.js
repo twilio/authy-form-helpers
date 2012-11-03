@@ -788,11 +788,6 @@
         setupCountriesDropdownPosition(countriesInput, countriesDropdown);
         return countriesDropdown.style.display = "block";
       };
-      countriesInput.onblur = function() {
-        return setTimeout((function() {
-          return document.getElementById("countries-autocomplete-" + listId).style.display = "none";
-        }), 200);
-      };
       countriesInput.onkeyup = function(event) {
         var keyID;
         document.getElementById("countries-autocomplete-" + listId).style.display = "block";
