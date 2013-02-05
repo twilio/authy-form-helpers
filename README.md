@@ -12,7 +12,7 @@ They include:
 3. A tooltip you can use to add a help message when you ask for the token
 
 
-## CND
+## CDN
 
 You can copy manually the javascripts and stylesheets into your project or you can simply use authy website to serve them:
 
