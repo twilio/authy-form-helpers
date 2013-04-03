@@ -1,10 +1,10 @@
 (function() {
-
   window.Authy = {};
 
   if (document.getElementsByClassName == null) {
     document.getElementsByClassName = function(className, parentElement) {
       var child, children, elements, i, length;
+
       children = (parentElement || document.body).getElementsByTagName("*");
       elements = [];
       child = void 0;
@@ -26,6 +26,7 @@
 
   window.Authy.UI = function() {
     var absolutePosFor, buildItem, countriesList, findAndSetupCountries, getKeyCode, processKey13, processKey38, processKey40, self, setupAuthyTokenValidation, setupCellphoneValidation, setupCountriesDropdown, setupCountriesDropdownPosition, setupEvents, setupTooltip, setupTooltipPosition, tooltipMessage, tooltipTitle;
+
     self = this;
     tooltipTitle = "Authy Help Tooltip";
     tooltipMessage = "This is a help tooltip for your users. You can set the message by doing: authyUI.setTooltip(\"title\", \"message\");";
@@ -682,6 +683,7 @@
     ];
     setupCellphoneValidation = function() {
       var cellPhone;
+
       cellPhone = document.getElementById("authy-cellphone");
       if (!cellPhone) {
         return;
@@ -696,6 +698,7 @@
     };
     setupAuthyTokenValidation = function() {
       var token;
+
       token = document.getElementById("authy-token");
       if (!token) {
         return;
@@ -710,6 +713,7 @@
     };
     setupTooltip = function() {
       var authy_help, tooltip;
+
       authy_help = document.getElementById("authy-help");
       if (!authy_help) {
         return;
@@ -730,6 +734,7 @@
     };
     setupTooltipPosition = function(helpLink, tooltip) {
       var pos, tooltipLeft, tooltipTop;
+
       pos = absolutePosFor(helpLink);
       tooltipTop = pos[0];
       tooltipLeft = pos[1] + helpLink.offsetWidth + 5;
@@ -737,6 +742,7 @@
     };
     processKey40 = function(listId) {
       var caId, countriesArr, countriesDropdown, i, li, selectedLi, _i, _len;
+
       caId = "countries-autocomplete-" + listId;
       countriesDropdown = document.getElementById(caId);
       countriesArr = countriesDropdown.getElementsByTagName("li");
@@ -755,6 +761,7 @@
     };
     processKey38 = function(listId) {
       var caId, countriesArr, i;
+
       caId = "countries-autocomplete-" + listId;
       countriesArr = document.getElementById(caId).getElementsByTagName("li");
       i = countriesArr.length - 1;
@@ -774,6 +781,7 @@
     };
     processKey13 = function(listId) {
       var obj;
+
       obj = document.getElementById("countries-autocomplete-" + listId).getElementsByClassName("active")[0];
       self.autocomplete(obj);
       return false;
@@ -784,12 +792,14 @@
       }
       countriesInput.onfocus = function() {
         var countriesDropdown;
+
         countriesDropdown = document.getElementById("countries-autocomplete-" + listId);
         setupCountriesDropdownPosition(countriesInput, countriesDropdown);
         return countriesDropdown.style.display = "block";
       };
       countriesInput.onkeyup = function(event) {
         var keyID;
+
         document.getElementById("countries-autocomplete-" + listId).style.display = "block";
         keyID = getKeyCode(event);
         switch (keyID) {
@@ -838,11 +848,13 @@
     };
     buildItem = function(classActive, country, listId) {
       var cc;
+
       cc = country.country.substring(0, 2).toLowerCase() + country.code;
       return "<li class=\"" + classActive + "\" onclick=\"Authy.UI.instance().autocomplete(this);return false;\" data-list-id=\"" + listId + "\" rel=\"" + country.code + "\" data-name=\"" + country.country + "\"" + ">" + "<span class=\"aflag flag-" + cc + "\"></span> " + " <span>" + country.country + "</span></li>";
     };
     absolutePosFor = function(element) {
       var absLeft, absTop;
+
       absTop = 0;
       absLeft = 0;
       while (element) {
@@ -853,7 +865,8 @@
       return [absTop, absLeft];
     };
     setupCountriesDropdown = function(countriesSelect, listId) {
-      var buf, classActive, countries, countriesAutocompleteHTML, countriesDropdown, countriesInput, countryCodeValue, i, name;
+      var buf, classActive, countries, countriesAutocompleteHTML, countriesDropdown, countriesInput, countryCodeValue, i, name, placeholder;
+
       if (!countriesSelect) {
         return;
       }
@@ -890,6 +903,11 @@
       countriesInput.setAttribute("class", "countries-input");
       countriesInput.setAttribute("type", "text");
       countriesInput.setAttribute("autocomplete", "off");
+      placeholder = countriesSelect.getAttribute("placeholder");
+      if (placeholder != null) {
+        countriesSelect.removeAttribute("placeholder");
+        countriesInput.setAttribute("placeholder", placeholder);
+      }
       countriesSelect.parentNode.insertBefore(countriesInput, countriesSelect);
       countriesSelect.parentNode.appendChild(countryCodeValue);
       countriesDropdown.setAttribute("id", "countries-autocomplete-" + listId);
@@ -899,6 +917,7 @@
     };
     setupCountriesDropdownPosition = function(countriesInput, countriesDropdown) {
       var pos, width;
+
       pos = absolutePosFor(countriesInput);
       width = countriesInput.offsetWidth;
       if (width < 220) {
@@ -908,6 +927,7 @@
     };
     findAndSetupCountries = function() {
       var countries, i;
+
       setupCountriesDropdown(document.getElementById("authy-countries"), 0);
       countries = document.getElementsByClassName("authy-countries");
       i = 0;
@@ -918,6 +938,7 @@
     };
     getKeyCode = function(event) {
       var keyCode;
+
       if (event && event.which) {
         keyCode = event.which;
       } else if (window.event) {
@@ -933,6 +954,7 @@
     };
     this.searchItem = function(listId) {
       var classActive, countriesAutocompleteHTML, countriesInput, countryItem, countryWords, cw, i, matches, reg, str;
+
       classActive = "active";
       countriesInput = document.getElementById("countries-input-" + listId);
       str = countriesInput.value;
@@ -963,6 +985,7 @@
     };
     this.autocomplete = function(obj) {
       var listId;
+
       listId = obj.getAttribute("data-list-id");
       document.getElementById("countries-input-" + listId).value = obj.getAttribute("data-name");
       document.getElementById("countries-autocomplete-" + listId).style.display = "none";
@@ -970,6 +993,7 @@
     };
     this.setTooltip = function(title, msg) {
       var tooltip;
+
       tooltip = document.getElementById("authy-tooltip");
       if (!tooltip) {
         return;

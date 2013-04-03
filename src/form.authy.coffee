@@ -19,7 +19,7 @@ unless document.getElementsByClassName?
     return document.getElementsByClassName className, this
 
 window.Authy.UI = ->
-  
+
   # Attributes
   self = this
   tooltipTitle = "Authy Help Tooltip"
@@ -101,7 +101,7 @@ window.Authy.UI = ->
     ]
 
 
-    
+
   # Private Members
 
   #validates the cellphone is not null and partially correct
@@ -116,7 +116,7 @@ window.Authy.UI = ->
     return
 
 
-   #Validates Authy token is not null 
+   #Validates Authy token is not null
    setupAuthyTokenValidation = ->
     token = document.getElementById("authy-token")
     return  unless token
@@ -145,17 +145,17 @@ window.Authy.UI = ->
 
     document.getElementById("authy-tooltip-close").onclick = ->
       document.getElementById("authy-tooltip").style.display = "none"
-    
+
     setupTooltipPosition(authy_help, tooltip)
 
-    return  
+    return
 
   #
   # Set the tooltip position
   #
-  setupTooltipPosition = (helpLink, tooltip) -> 
+  setupTooltipPosition = (helpLink, tooltip) ->
     pos = absolutePosFor(helpLink)
-    tooltipTop = pos[0] 
+    tooltipTop = pos[0]
     tooltipLeft = pos[1] + helpLink.offsetWidth + 5
     tooltip.setAttribute "style", "top:" + tooltipTop + "px;left:" + tooltipLeft + "px;"
 
@@ -165,7 +165,7 @@ window.Authy.UI = ->
     caId = "countries-autocomplete-" + listId
     countriesDropdown = document.getElementById(caId)
     countriesArr =  countriesDropdown.getElementsByTagName("li")
-    
+
     i = 0
     for li in countriesArr #search all the array which is active and set the next one as active
       if li.className == "active" && countriesArr.length > (i + 1)
@@ -177,7 +177,7 @@ window.Authy.UI = ->
       i++
     return false
 
-  
+
   #process the up arrow key
   processKey38 = (listId) ->
     caId = "countries-autocomplete-" + listId
@@ -196,7 +196,7 @@ window.Authy.UI = ->
     document.getElementById(caId).getElementsByTagName("li")[0].setAttribute("class", "active")
     return
 
-  
+
   #
   # Process the enter key
   #
@@ -219,7 +219,7 @@ window.Authy.UI = ->
 
     countriesInput.onkeyup = (event) ->
       document.getElementById("countries-autocomplete-" + listId).style.display = "block"
-      keyID = getKeyCode(event) 
+      keyID = getKeyCode(event)
       switch keyID
         when 13 # enter key
           processKey13(listId)
@@ -250,7 +250,7 @@ window.Authy.UI = ->
       else
         e = window.event
         e.cancelBubble = true
-        
+
     document.onclick = ->
       document.getElementById("countries-autocomplete-" + listId).style.display = "none"
       return
@@ -267,11 +267,11 @@ window.Authy.UI = ->
             + cc + "\"></span> " + " <span>" + country.country + "</span></li>"
 
 
-  # 
+  #
   # Given an element returns it absolute position
   #
   absolutePosFor = (element) ->
-    absTop = 0 
+    absTop = 0
     absLeft = 0
     while element
       absTop += element.offsetTop
@@ -279,7 +279,7 @@ window.Authy.UI = ->
       element = element.offsetParent
     return [absTop, absLeft]
 
- 
+
   #
   # Sets up the countriesDropDown
   #
@@ -317,19 +317,24 @@ window.Authy.UI = ->
     countriesAutocompleteHTML += "</ul>"
     countriesDropdown.innerHTML = countriesAutocompleteHTML
     document.body.appendChild countriesDropdown
-  
+
     countriesInput = document.createElement("input")
     countriesInput.setAttribute "id", "countries-input-" + listId
     countriesInput.setAttribute "class", "countries-input"
     countriesInput.setAttribute "type", "text"
     countriesInput.setAttribute "autocomplete", "off"
 
+    placeholder = countriesSelect.getAttribute("placeholder")
+    if placeholder?
+      countriesSelect.removeAttribute "placeholder"
+      countriesInput.setAttribute "placeholder", placeholder
+
     countriesSelect.parentNode.insertBefore countriesInput, countriesSelect
     countriesSelect.parentNode.appendChild countryCodeValue
 
     countriesDropdown.setAttribute "id", "countries-autocomplete-" + listId
     countriesDropdown.setAttribute "class", "countries-autocomplete"
-    
+
     setupCountriesDropdownPosition(countriesInput, countriesDropdown)
 
     setupEvents countriesInput, listId
@@ -341,7 +346,7 @@ window.Authy.UI = ->
   setupCountriesDropdownPosition = (countriesInput, countriesDropdown) ->
     pos = absolutePosFor(countriesInput)
 
-    width = countriesInput.offsetWidth 
+    width = countriesInput.offsetWidth
     if width < 220
       width = 220
     countriesDropdown.setAttribute "style", "width: " + (width - 5) + "px; top: " + (pos[0] + 2 + countriesInput.offsetHeight) + "px; left: " + (pos[1] - 2) + "px;"
@@ -364,11 +369,11 @@ window.Authy.UI = ->
 
 
   getKeyCode = (event) ->
-    if event && event.which #others 
+    if event && event.which #others
       keyCode = event.which
     else if window.event
-      keyCode = window.event.keyCode 
-    
+      keyCode = window.event.keyCode
+
     return keyCode
 
 
@@ -383,7 +388,7 @@ window.Authy.UI = ->
     setupTooltip()
     findAndSetupCountries()
     setupCellphoneValidation()
-  
+
 
   @searchItem = (listId) ->
     classActive = "active"
@@ -398,7 +403,7 @@ window.Authy.UI = ->
     while i < countriesList.length
       countryItem = countriesList[i]
       countryWords = countryItem.country.toLowerCase().split(/\s+/)
-      
+
       # Capture words starting with the entered pattern
       cw = 0
 
@@ -426,7 +431,7 @@ window.Authy.UI = ->
     tooltip.getElementsByClassName("tooltip-title")[0].innerHTML = title
     tooltip.getElementsByClassName("tooltip-content")[0].innerHTML = msg
     return
-  
+
   return #class return
 Authy.UI.instance = ->
   unless @ui
@@ -437,7 +442,7 @@ Authy.UI.instance = ->
 window.onload = ->
   Authy.UI.instance()
 
-  
-  
-   
+
+
+
 
