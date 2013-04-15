@@ -169,10 +169,11 @@ window.Authy.UI = ->
     i = 0
     for li in countriesArr #search all the array which is active and set the next one as active
       if li.className == "active" && countriesArr.length > (i + 1)
-        selectedLi = countriesArr[i + 1]
-        selectedLi.className = "active"
+        activeElement = countriesArr[i + 1]
+        activeElement.className = "active"
         li.className = ""
         # countriesDropdown.scrollTo(0, selectedLi.offsetTop)
+        self.autocomplete(activeElement, false)
         break
       i++
     return false
@@ -187,13 +188,18 @@ window.Authy.UI = ->
     while i >= 0
       if document.getElementById(caId).getElementsByTagName("li")[i].className == "active"
         document.getElementById(caId).getElementsByTagName("li")[i].className = ""
+        activeElement = null
         if i == 0
-          document.getElementById(caId).getElementsByTagName("li")[countriesArr.length - 1].className = "active"
+          activeElement = document.getElementById(caId).getElementsByTagName("li")[countriesArr.length - 1]
+          activeElement.className = "active"
         else
-          document.getElementById(caId).getElementsByTagName("li")[i - 1].className = "active"
+          activeElement = document.getElementById(caId).getElementsByTagName("li")[i - 1]
+          activeElement.className = "active"
+        self.autocomplete(activeElement, false)
         return false
       i--
     document.getElementById(caId).getElementsByTagName("li")[0].setAttribute("class", "active")
+
     return
 
 
@@ -202,7 +208,7 @@ window.Authy.UI = ->
   #
   processKey13 = (listId) ->
     obj = document.getElementById("countries-autocomplete-" + listId).getElementsByClassName("active")[0]
-    self.autocomplete obj
+    self.autocomplete(obj, true)
     return false
 
 
@@ -395,6 +401,7 @@ window.Authy.UI = ->
     countriesInput = document.getElementById("countries-input-" + listId)
     str = countriesInput.value
     countriesAutocompleteHTML = "<ul>"
+    firstCountryCodeFound = null
     matches = false
     str = str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&") # Escape regular expression special characters
     reg = new RegExp("^" + str, "i")
@@ -412,18 +419,25 @@ window.Authy.UI = ->
           countriesAutocompleteHTML += buildItem(classActive, countryItem, listId)
           classActive = ""
           matches = true
+          firstCountryCodeFound = countryItem.code unless firstCountryCodeFound?
           break
         cw++
       i++
     countriesAutocompleteHTML += "</ul>"
-    document.getElementById("countries-autocomplete-" + listId).innerHTML = countriesAutocompleteHTML  if matches
+    if matches
+      document.getElementById("countries-autocomplete-" + listId).innerHTML = countriesAutocompleteHTML  
+      self.setCountryCode(listId, firstCountryCodeFound)
 
-  @autocomplete = (obj) ->
+  @autocomplete = (obj, hideList) ->
     listId = obj.getAttribute("data-list-id")
     document.getElementById("countries-input-" + listId).value = obj.getAttribute("data-name")
-    document.getElementById("countries-autocomplete-" + listId).style.display = "none"
-    document.getElementById("country-code-" + listId).value = obj.getAttribute("rel")
+    self.setCountryCode(listId, obj.getAttribute("rel"))
+    if hideList
+      document.getElementById("countries-autocomplete-" + listId).style.display = "none"
     return
+
+  @setCountryCode = (listId, countryCode) ->
+    document.getElementById("country-code-" + listId).value = countryCode
 
   @setTooltip = (title, msg) ->
     tooltip = document.getElementById("authy-tooltip")

@@ -741,7 +741,7 @@
       return tooltip.setAttribute("style", "top:" + tooltipTop + "px;left:" + tooltipLeft + "px;");
     };
     processKey40 = function(listId) {
-      var caId, countriesArr, countriesDropdown, i, li, selectedLi, _i, _len;
+      var activeElement, caId, countriesArr, countriesDropdown, i, li, _i, _len;
 
       caId = "countries-autocomplete-" + listId;
       countriesDropdown = document.getElementById(caId);
@@ -750,9 +750,10 @@
       for (_i = 0, _len = countriesArr.length; _i < _len; _i++) {
         li = countriesArr[_i];
         if (li.className === "active" && countriesArr.length > (i + 1)) {
-          selectedLi = countriesArr[i + 1];
-          selectedLi.className = "active";
+          activeElement = countriesArr[i + 1];
+          activeElement.className = "active";
           li.className = "";
+          self.autocomplete(activeElement, false);
           break;
         }
         i++;
@@ -760,7 +761,7 @@
       return false;
     };
     processKey38 = function(listId) {
-      var caId, countriesArr, i;
+      var activeElement, caId, countriesArr, i;
 
       caId = "countries-autocomplete-" + listId;
       countriesArr = document.getElementById(caId).getElementsByTagName("li");
@@ -768,11 +769,15 @@
       while (i >= 0) {
         if (document.getElementById(caId).getElementsByTagName("li")[i].className === "active") {
           document.getElementById(caId).getElementsByTagName("li")[i].className = "";
+          activeElement = null;
           if (i === 0) {
-            document.getElementById(caId).getElementsByTagName("li")[countriesArr.length - 1].className = "active";
+            activeElement = document.getElementById(caId).getElementsByTagName("li")[countriesArr.length - 1];
+            activeElement.className = "active";
           } else {
-            document.getElementById(caId).getElementsByTagName("li")[i - 1].className = "active";
+            activeElement = document.getElementById(caId).getElementsByTagName("li")[i - 1];
+            activeElement.className = "active";
           }
+          self.autocomplete(activeElement, false);
           return false;
         }
         i--;
@@ -783,7 +788,7 @@
       var obj;
 
       obj = document.getElementById("countries-autocomplete-" + listId).getElementsByClassName("active")[0];
-      self.autocomplete(obj);
+      self.autocomplete(obj, true);
       return false;
     };
     setupEvents = function(countriesInput, listId) {
@@ -953,12 +958,13 @@
       return setupCellphoneValidation();
     };
     this.searchItem = function(listId) {
-      var classActive, countriesAutocompleteHTML, countriesInput, countryItem, countryWords, cw, i, matches, reg, str;
+      var classActive, countriesAutocompleteHTML, countriesInput, countryItem, countryWords, cw, firstCountryCodeFound, i, matches, reg, str;
 
       classActive = "active";
       countriesInput = document.getElementById("countries-input-" + listId);
       str = countriesInput.value;
       countriesAutocompleteHTML = "<ul>";
+      firstCountryCodeFound = null;
       matches = false;
       str = str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
       reg = new RegExp("^" + str, "i");
@@ -972,6 +978,9 @@
             countriesAutocompleteHTML += buildItem(classActive, countryItem, listId);
             classActive = "";
             matches = true;
+            if (firstCountryCodeFound == null) {
+              firstCountryCodeFound = countryItem.code;
+            }
             break;
           }
           cw++;
@@ -980,16 +989,22 @@
       }
       countriesAutocompleteHTML += "</ul>";
       if (matches) {
-        return document.getElementById("countries-autocomplete-" + listId).innerHTML = countriesAutocompleteHTML;
+        document.getElementById("countries-autocomplete-" + listId).innerHTML = countriesAutocompleteHTML;
+        return self.setCountryCode(listId, firstCountryCodeFound);
       }
     };
-    this.autocomplete = function(obj) {
+    this.autocomplete = function(obj, hideList) {
       var listId;
 
       listId = obj.getAttribute("data-list-id");
       document.getElementById("countries-input-" + listId).value = obj.getAttribute("data-name");
-      document.getElementById("countries-autocomplete-" + listId).style.display = "none";
-      document.getElementById("country-code-" + listId).value = obj.getAttribute("rel");
+      self.setCountryCode(listId, obj.getAttribute("rel"));
+      if (hideList) {
+        document.getElementById("countries-autocomplete-" + listId).style.display = "none";
+      }
+    };
+    this.setCountryCode = function(listId, countryCode) {
+      return document.getElementById("country-code-" + listId).value = countryCode;
     };
     this.setTooltip = function(title, msg) {
       var tooltip;
