@@ -243,6 +243,7 @@ window.Authy.UI = ->
 
     document.getElementById("countries-autocomplete-" + listId).onclick = (e) ->
       if e && e.stopPropagation
+        hideAutocompleteList(listId)
         e.stopPropagation()
       else
         e = window.event
@@ -258,10 +259,11 @@ window.Authy.UI = ->
         e.cancelBubble = true
 
     document.onclick = ->
-      document.getElementById("countries-autocomplete-" + listId).style.display = "none"
+      hideAutocompleteList(listId)
       return
 
-
+  hideAutocompleteList = (listId) ->
+    document.getElementById("countries-autocomplete-" + listId).style.display = "none"
 
   #
   # Returns each country code <li> item
@@ -433,7 +435,7 @@ window.Authy.UI = ->
     document.getElementById("countries-input-" + listId).value = obj.getAttribute("data-name")
     self.setCountryCode(listId, obj.getAttribute("rel"))
     if hideList
-      document.getElementById("countries-autocomplete-" + listId).style.display = "none"
+      hideAutocompleteList(listId)
     return
 
   @setCountryCode = (listId, countryCode) ->

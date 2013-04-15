@@ -25,7 +25,7 @@
   }
 
   window.Authy.UI = function() {
-    var absolutePosFor, buildItem, countriesList, findAndSetupCountries, getKeyCode, processKey13, processKey38, processKey40, self, setupAuthyTokenValidation, setupCellphoneValidation, setupCountriesDropdown, setupCountriesDropdownPosition, setupEvents, setupTooltip, setupTooltipPosition, tooltipMessage, tooltipTitle;
+    var absolutePosFor, buildItem, countriesList, findAndSetupCountries, getKeyCode, hideAutocompleteList, processKey13, processKey38, processKey40, self, setupAuthyTokenValidation, setupCellphoneValidation, setupCountriesDropdown, setupCountriesDropdownPosition, setupEvents, setupTooltip, setupTooltipPosition, tooltipMessage, tooltipTitle;
 
     self = this;
     tooltipTitle = "Authy Help Tooltip";
@@ -831,6 +831,7 @@
       };
       document.getElementById("countries-autocomplete-" + listId).onclick = function(e) {
         if (e && e.stopPropagation) {
+          hideAutocompleteList(listId);
           return e.stopPropagation();
         } else {
           e = window.event;
@@ -848,8 +849,11 @@
         }
       };
       return document.onclick = function() {
-        document.getElementById("countries-autocomplete-" + listId).style.display = "none";
+        hideAutocompleteList(listId);
       };
+    };
+    hideAutocompleteList = function(listId) {
+      return document.getElementById("countries-autocomplete-" + listId).style.display = "none";
     };
     buildItem = function(classActive, country, listId) {
       var cc;
@@ -1000,7 +1004,7 @@
       document.getElementById("countries-input-" + listId).value = obj.getAttribute("data-name");
       self.setCountryCode(listId, obj.getAttribute("rel"));
       if (hideList) {
-        document.getElementById("countries-autocomplete-" + listId).style.display = "none";
+        hideAutocompleteList(listId);
       }
     };
     this.setCountryCode = function(listId, countryCode) {
