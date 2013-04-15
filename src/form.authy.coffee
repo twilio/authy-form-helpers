@@ -415,7 +415,7 @@ window.Authy.UI = ->
       cw = 0
 
       while cw < countryWords.length
-        if countryWords[cw].length > 2 && countryWords[cw].match(reg)
+        if (countryWords[cw].length > 2 && countryWords[cw].match(reg)) || "#{countryItem.code}".match(reg)
           countriesAutocompleteHTML += buildItem(classActive, countryItem, listId)
           classActive = ""
           matches = true
