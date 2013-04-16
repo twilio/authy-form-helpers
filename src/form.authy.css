@@ -11,9 +11,13 @@
 
 .countries-autocomplete li {
   list-style-type:none;
-  padding: 5px 10px;
+  padding: 5px 3px;
   font-size: 12px;
   font-family: arial;
+}
+
+.countries-autocomplete li span {
+  margin: 0 2px;
 }
 
 .countries-autocomplete li:hover,
