@@ -170,9 +170,9 @@ window.Authy.UI = ->
     for li in countriesArr #search all the array which is active and set the next one as active
       if li.className == "active" && countriesArr.length > (i + 1)
         activeElement = countriesArr[i + 1]
-        activeElement.className = "active"
         li.className = ""
         # countriesDropdown.scrollTo(0, selectedLi.offsetTop)
+        setActive(activeElement)
         self.autocomplete(activeElement, false)
         break
       i++
@@ -191,10 +191,10 @@ window.Authy.UI = ->
         activeElement = null
         if i == 0
           activeElement = document.getElementById(caId).getElementsByTagName("li")[countriesArr.length - 1]
-          activeElement.className = "active"
         else
           activeElement = document.getElementById(caId).getElementsByTagName("li")[i - 1]
-          activeElement.className = "active"
+
+        setActive(activeElement)
         self.autocomplete(activeElement, false)
         return false
       i--
@@ -211,6 +211,13 @@ window.Authy.UI = ->
     self.autocomplete(obj, true)
     return false
 
+  setActive = (liElement) ->
+    listId = liElement.getAttribute("data-list-id")
+    liElements = document.getElementById("countries-autocomplete-" + listId).getElementsByTagName("li")
+    for li in liElements
+      li.className = ""
+
+    liElement.className = "active"
 
   #
   # Setup to handle the keyboard input events
@@ -218,10 +225,14 @@ window.Authy.UI = ->
   setupEvents = (countriesInput, listId) ->
     return  unless countriesInput
 
+    countriesInput.onblur = (event) ->
+      processKey13(listId)
+
     countriesInput.onfocus = ->
       countriesDropdown = document.getElementById("countries-autocomplete-" + listId)
       setupCountriesDropdownPosition(countriesInput, countriesDropdown )
       countriesDropdown.style.display = "block"
+      return
 
     countriesInput.onkeyup = (event) ->
       document.getElementById("countries-autocomplete-" + listId).style.display = "block"
@@ -270,10 +281,24 @@ window.Authy.UI = ->
   #
   buildItem = (classActive, country, listId) ->
     cc = country.country.substring(0, 2).toLowerCase() + country.code
-    return "<li class=\"" + classActive + "\" onclick=\"Authy.UI.instance().autocomplete(this);return false;\" data-list-id=\""  \
-            + listId + "\" rel=\"" + country.code + "\" data-name=\"" + country.country + "\"" + ">" + "<span class=\"aflag flag-" \
-            + cc + "\"></span> " + " <span>" + country.country + "</span></li>"
+    li = document.createElement("li")
+    li.setAttribute("class", classActive)
+    li.setAttribute("data-list-id", listId)
+    li.setAttribute("rel", country.code)
+    li.setAttribute("data-name", country.country)
 
+    li.onmouseover = (event) ->
+      setActive(li)
+
+    flag = document.createElement("span")
+    flag.setAttribute("class", "aflag flag-#{cc}")
+    li.appendChild(flag)
+
+    name = document.createElement("span")
+    name.innerHTML = country.country
+    li.appendChild(name)
+
+    return li
 
   #
   # Given an element returns it absolute position
@@ -314,16 +339,16 @@ window.Authy.UI = ->
     countryCodeValue.setAttribute "name", name
 
     classActive = ""
-    countriesAutocompleteHTML = "<ul>"
+    countriesAutocompleteList = document.createElement("ul")
     i = 0
 
     while i < countriesList.length
       classActive = (if (i is 0) then "active" else "")
-      countriesAutocompleteHTML += buildItem(classActive, countriesList[i], listId)
+      countriesAutocompleteList.appendChild(buildItem(classActive, countriesList[i], listId))
       i++
 
-    countriesAutocompleteHTML += "</ul>"
-    countriesDropdown.innerHTML = countriesAutocompleteHTML
+    countriesDropdown.innerHTML = ""
+    countriesDropdown.appendChild(countriesAutocompleteList)
     document.body.appendChild countriesDropdown
 
     countriesInput = document.createElement("input")
@@ -402,7 +427,7 @@ window.Authy.UI = ->
     classActive = "active"
     countriesInput = document.getElementById("countries-input-" + listId)
     str = countriesInput.value
-    countriesAutocompleteHTML = "<ul>"
+    countriesAutocompleteList = document.createElement("ul")
     firstCountryCodeFound = null
     matches = false
     str = str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&") # Escape regular expression special characters
@@ -418,16 +443,18 @@ window.Authy.UI = ->
 
       while cw < countryWords.length
         if (countryWords[cw].length > 2 && countryWords[cw].match(reg)) || "#{countryItem.code}".match(reg)
-          countriesAutocompleteHTML += buildItem(classActive, countryItem, listId)
+          countriesAutocompleteList.appendChild(buildItem(classActive, countryItem, listId))
           classActive = ""
           matches = true
           firstCountryCodeFound = countryItem.code unless firstCountryCodeFound?
           break
         cw++
       i++
-    countriesAutocompleteHTML += "</ul>"
+
     if matches
-      document.getElementById("countries-autocomplete-" + listId).innerHTML = countriesAutocompleteHTML  
+      dropdownMenu = document.getElementById("countries-autocomplete-" + listId)
+      dropdownMenu.innerHTML = ""
+      dropdownMenu.appendChild(countriesAutocompleteList)
       self.setCountryCode(listId, firstCountryCodeFound)
 
   @autocomplete = (obj, hideList) ->

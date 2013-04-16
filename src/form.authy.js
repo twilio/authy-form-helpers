@@ -25,7 +25,7 @@
   }
 
   window.Authy.UI = function() {
-    var absolutePosFor, buildItem, countriesList, findAndSetupCountries, getKeyCode, hideAutocompleteList, processKey13, processKey38, processKey40, self, setupAuthyTokenValidation, setupCellphoneValidation, setupCountriesDropdown, setupCountriesDropdownPosition, setupEvents, setupTooltip, setupTooltipPosition, tooltipMessage, tooltipTitle;
+    var absolutePosFor, buildItem, countriesList, findAndSetupCountries, getKeyCode, hideAutocompleteList, processKey13, processKey38, processKey40, self, setActive, setupAuthyTokenValidation, setupCellphoneValidation, setupCountriesDropdown, setupCountriesDropdownPosition, setupEvents, setupTooltip, setupTooltipPosition, tooltipMessage, tooltipTitle;
 
     self = this;
     tooltipTitle = "Authy Help Tooltip";
@@ -751,8 +751,8 @@
         li = countriesArr[_i];
         if (li.className === "active" && countriesArr.length > (i + 1)) {
           activeElement = countriesArr[i + 1];
-          activeElement.className = "active";
           li.className = "";
+          setActive(activeElement);
           self.autocomplete(activeElement, false);
           break;
         }
@@ -772,11 +772,10 @@
           activeElement = null;
           if (i === 0) {
             activeElement = document.getElementById(caId).getElementsByTagName("li")[countriesArr.length - 1];
-            activeElement.className = "active";
           } else {
             activeElement = document.getElementById(caId).getElementsByTagName("li")[i - 1];
-            activeElement.className = "active";
           }
+          setActive(activeElement);
           self.autocomplete(activeElement, false);
           return false;
         }
@@ -791,16 +790,30 @@
       self.autocomplete(obj, true);
       return false;
     };
+    setActive = function(liElement) {
+      var li, liElements, listId, _i, _len;
+
+      listId = liElement.getAttribute("data-list-id");
+      liElements = document.getElementById("countries-autocomplete-" + listId).getElementsByTagName("li");
+      for (_i = 0, _len = liElements.length; _i < _len; _i++) {
+        li = liElements[_i];
+        li.className = "";
+      }
+      return liElement.className = "active";
+    };
     setupEvents = function(countriesInput, listId) {
       if (!countriesInput) {
         return;
       }
+      countriesInput.onblur = function(event) {
+        return processKey13(listId);
+      };
       countriesInput.onfocus = function() {
         var countriesDropdown;
 
         countriesDropdown = document.getElementById("countries-autocomplete-" + listId);
         setupCountriesDropdownPosition(countriesInput, countriesDropdown);
-        return countriesDropdown.style.display = "block";
+        countriesDropdown.style.display = "block";
       };
       countriesInput.onkeyup = function(event) {
         var keyID;
@@ -856,10 +869,24 @@
       return document.getElementById("countries-autocomplete-" + listId).style.display = "none";
     };
     buildItem = function(classActive, country, listId) {
-      var cc;
+      var cc, flag, li, name;
 
       cc = country.country.substring(0, 2).toLowerCase() + country.code;
-      return "<li class=\"" + classActive + "\" onclick=\"Authy.UI.instance().autocomplete(this);return false;\" data-list-id=\"" + listId + "\" rel=\"" + country.code + "\" data-name=\"" + country.country + "\"" + ">" + "<span class=\"aflag flag-" + cc + "\"></span> " + " <span>" + country.country + "</span></li>";
+      li = document.createElement("li");
+      li.setAttribute("class", classActive);
+      li.setAttribute("data-list-id", listId);
+      li.setAttribute("rel", country.code);
+      li.setAttribute("data-name", country.country);
+      li.onmouseover = function(event) {
+        return setActive(li);
+      };
+      flag = document.createElement("span");
+      flag.setAttribute("class", "aflag flag-" + cc);
+      li.appendChild(flag);
+      name = document.createElement("span");
+      name.innerHTML = country.country;
+      li.appendChild(name);
+      return li;
     };
     absolutePosFor = function(element) {
       var absLeft, absTop;
@@ -874,7 +901,7 @@
       return [absTop, absLeft];
     };
     setupCountriesDropdown = function(countriesSelect, listId) {
-      var buf, classActive, countries, countriesAutocompleteHTML, countriesDropdown, countriesInput, countryCodeValue, i, name, placeholder;
+      var buf, classActive, countries, countriesAutocompleteList, countriesDropdown, countriesInput, countryCodeValue, i, name, placeholder;
 
       if (!countriesSelect) {
         return;
@@ -897,15 +924,15 @@
       countryCodeValue.setAttribute("id", "country-code-" + listId);
       countryCodeValue.setAttribute("name", name);
       classActive = "";
-      countriesAutocompleteHTML = "<ul>";
+      countriesAutocompleteList = document.createElement("ul");
       i = 0;
       while (i < countriesList.length) {
         classActive = (i === 0 ? "active" : "");
-        countriesAutocompleteHTML += buildItem(classActive, countriesList[i], listId);
+        countriesAutocompleteList.appendChild(buildItem(classActive, countriesList[i], listId));
         i++;
       }
-      countriesAutocompleteHTML += "</ul>";
-      countriesDropdown.innerHTML = countriesAutocompleteHTML;
+      countriesDropdown.innerHTML = "";
+      countriesDropdown.appendChild(countriesAutocompleteList);
       document.body.appendChild(countriesDropdown);
       countriesInput = document.createElement("input");
       countriesInput.setAttribute("id", "countries-input-" + listId);
@@ -962,12 +989,12 @@
       return setupCellphoneValidation();
     };
     this.searchItem = function(listId) {
-      var classActive, countriesAutocompleteHTML, countriesInput, countryItem, countryWords, cw, firstCountryCodeFound, i, matches, reg, str;
+      var classActive, countriesAutocompleteList, countriesInput, countryItem, countryWords, cw, dropdownMenu, firstCountryCodeFound, i, matches, reg, str;
 
       classActive = "active";
       countriesInput = document.getElementById("countries-input-" + listId);
       str = countriesInput.value;
-      countriesAutocompleteHTML = "<ul>";
+      countriesAutocompleteList = document.createElement("ul");
       firstCountryCodeFound = null;
       matches = false;
       str = str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
@@ -979,7 +1006,7 @@
         cw = 0;
         while (cw < countryWords.length) {
           if ((countryWords[cw].length > 2 && countryWords[cw].match(reg)) || ("" + countryItem.code).match(reg)) {
-            countriesAutocompleteHTML += buildItem(classActive, countryItem, listId);
+            countriesAutocompleteList.appendChild(buildItem(classActive, countryItem, listId));
             classActive = "";
             matches = true;
             if (firstCountryCodeFound == null) {
@@ -991,9 +1018,10 @@
         }
         i++;
       }
-      countriesAutocompleteHTML += "</ul>";
       if (matches) {
-        document.getElementById("countries-autocomplete-" + listId).innerHTML = countriesAutocompleteHTML;
+        dropdownMenu = document.getElementById("countries-autocomplete-" + listId);
+        dropdownMenu.innerHTML = "";
+        dropdownMenu.appendChild(countriesAutocompleteList);
         return self.setCountryCode(listId, firstCountryCodeFound);
       }
     };
