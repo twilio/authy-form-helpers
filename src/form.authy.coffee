@@ -109,7 +109,7 @@ window.Authy.UI = ->
     cellPhone = document.getElementById("authy-cellphone")
     return  unless cellPhone
     cellPhone.onblur = ->
-      if cellPhone.value != "" and cellPhone.value.match(/^([0-9][0-9][0-9])\W*([0-9][0-9]{2})\W*([0-9]{3,5})$/)
+      if cellPhone.value != "" and cellPhone.value.match(/^([0-9][0-9][0-9])\W*([0-9][0-9]{2})\W*([0-9]{0,5})$/)
         cellPhone.style.backgroundColor = "white"
       else
         cellPhone.style.backgroundColor = "#F2DEDE"
