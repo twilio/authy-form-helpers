@@ -689,7 +689,7 @@
         return;
       }
       cellPhone.onblur = function() {
-        if (cellPhone.value !== "" && cellPhone.value.match(/^([0-9][0-9][0-9])\W*([0-9][0-9]{2})\W*([0-9]{3,5})$/)) {
+        if (cellPhone.value !== "" && cellPhone.value.match(/^([0-9][0-9][0-9])\W*([0-9][0-9]{2})\W*([0-9]{0,5})$/)) {
           return cellPhone.style.backgroundColor = "white";
         } else {
           return cellPhone.style.backgroundColor = "#F2DEDE";
