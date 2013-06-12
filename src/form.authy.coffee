@@ -19,7 +19,7 @@ unless document.getElementsByClassName?
     return document.getElementsByClassName className, this
 
 window.Authy.UI = ->
-  
+
   # Attributes
   self = this
   tooltipTitle = "Authy Help Tooltip"
@@ -101,7 +101,7 @@ window.Authy.UI = ->
     ]
 
 
-    
+
   # Private Members
 
   #validates the cellphone is not null and partially correct
@@ -109,14 +109,14 @@ window.Authy.UI = ->
     cellPhone = document.getElementById("authy-cellphone")
     return  unless cellPhone
     cellPhone.onblur = ->
-      if cellPhone.value != "" and cellPhone.value.match(/^([0-9][0-9][0-9])\W*([0-9][0-9]{2})\W*([0-9]{3,5})$/)
+      if cellPhone.value != "" and cellPhone.value.match(/^([0-9][0-9][0-9])\W*([0-9][0-9]{2})\W*([0-9]{0,5})$/)
         cellPhone.style.backgroundColor = "white"
       else
         cellPhone.style.backgroundColor = "#F2DEDE"
     return
 
 
-   #Validates Authy token is not null 
+   #Validates Authy token is not null
    setupAuthyTokenValidation = ->
     token = document.getElementById("authy-token")
     return  unless token
@@ -145,17 +145,17 @@ window.Authy.UI = ->
 
     document.getElementById("authy-tooltip-close").onclick = ->
       document.getElementById("authy-tooltip").style.display = "none"
-    
+
     setupTooltipPosition(authy_help, tooltip)
 
-    return  
+    return
 
   #
   # Set the tooltip position
   #
-  setupTooltipPosition = (helpLink, tooltip) -> 
+  setupTooltipPosition = (helpLink, tooltip) ->
     pos = absolutePosFor(helpLink)
-    tooltipTop = pos[0] 
+    tooltipTop = pos[0]
     tooltipLeft = pos[1] + helpLink.offsetWidth + 5
     tooltip.setAttribute "style", "top:" + tooltipTop + "px;left:" + tooltipLeft + "px;"
 
@@ -165,19 +165,20 @@ window.Authy.UI = ->
     caId = "countries-autocomplete-" + listId
     countriesDropdown = document.getElementById(caId)
     countriesArr =  countriesDropdown.getElementsByTagName("li")
-    
+
     i = 0
     for li in countriesArr #search all the array which is active and set the next one as active
       if li.className == "active" && countriesArr.length > (i + 1)
-        selectedLi = countriesArr[i + 1]
-        selectedLi.className = "active"
+        activeElement = countriesArr[i + 1]
         li.className = ""
         # countriesDropdown.scrollTo(0, selectedLi.offsetTop)
+        setActive(activeElement)
+        self.autocomplete(activeElement, false)
         break
       i++
     return false
 
-  
+
   #process the up arrow key
   processKey38 = (listId) ->
     caId = "countries-autocomplete-" + listId
@@ -187,24 +188,36 @@ window.Authy.UI = ->
     while i >= 0
       if document.getElementById(caId).getElementsByTagName("li")[i].className == "active"
         document.getElementById(caId).getElementsByTagName("li")[i].className = ""
+        activeElement = null
         if i == 0
-          document.getElementById(caId).getElementsByTagName("li")[countriesArr.length - 1].className = "active"
+          activeElement = document.getElementById(caId).getElementsByTagName("li")[countriesArr.length - 1]
         else
-          document.getElementById(caId).getElementsByTagName("li")[i - 1].className = "active"
+          activeElement = document.getElementById(caId).getElementsByTagName("li")[i - 1]
+
+        setActive(activeElement)
+        self.autocomplete(activeElement, false)
         return false
       i--
     document.getElementById(caId).getElementsByTagName("li")[0].setAttribute("class", "active")
+
     return
 
-  
+
   #
   # Process the enter key
   #
   processKey13 = (listId) ->
     obj = document.getElementById("countries-autocomplete-" + listId).getElementsByClassName("active")[0]
-    self.autocomplete obj
+    self.autocomplete(obj, true)
     return false
 
+  setActive = (liElement) ->
+    listId = liElement.getAttribute("data-list-id")
+    liElements = document.getElementById("countries-autocomplete-" + listId).getElementsByTagName("li")
+    for li in liElements
+      li.className = ""
+
+    liElement.className = "active"
 
   #
   # Setup to handle the keyboard input events
@@ -212,14 +225,18 @@ window.Authy.UI = ->
   setupEvents = (countriesInput, listId) ->
     return  unless countriesInput
 
+    countriesInput.onblur = (event) ->
+      processKey13(listId)
+
     countriesInput.onfocus = ->
       countriesDropdown = document.getElementById("countries-autocomplete-" + listId)
       setupCountriesDropdownPosition(countriesInput, countriesDropdown )
       countriesDropdown.style.display = "block"
+      return
 
     countriesInput.onkeyup = (event) ->
       document.getElementById("countries-autocomplete-" + listId).style.display = "block"
-      keyID = getKeyCode(event) 
+      keyID = getKeyCode(event)
       switch keyID
         when 13 # enter key
           processKey13(listId)
@@ -237,6 +254,7 @@ window.Authy.UI = ->
 
     document.getElementById("countries-autocomplete-" + listId).onclick = (e) ->
       if e && e.stopPropagation
+        hideAutocompleteList(listId)
         e.stopPropagation()
       else
         e = window.event
@@ -250,28 +268,43 @@ window.Authy.UI = ->
       else
         e = window.event
         e.cancelBubble = true
-        
+
     document.onclick = ->
-      document.getElementById("countries-autocomplete-" + listId).style.display = "none"
+      hideAutocompleteList(listId)
       return
 
-
+  hideAutocompleteList = (listId) ->
+    document.getElementById("countries-autocomplete-" + listId).style.display = "none"
 
   #
   # Returns each country code <li> item
   #
   buildItem = (classActive, country, listId) ->
     cc = country.country.substring(0, 2).toLowerCase() + country.code
-    return "<li class=\"" + classActive + "\" onclick=\"Authy.UI.instance().autocomplete(this);return false;\" data-list-id=\""  \
-            + listId + "\" rel=\"" + country.code + "\" data-name=\"" + country.country + "\"" + ">" + "<span class=\"aflag flag-" \
-            + cc + "\"></span> " + " <span>" + country.country + "</span></li>"
+    li = document.createElement("li")
+    li.setAttribute("class", classActive)
+    li.setAttribute("data-list-id", listId)
+    li.setAttribute("rel", country.code)
+    li.setAttribute("data-name", country.country)
 
+    li.onmouseover = (event) ->
+      setActive(li)
 
-  # 
+    flag = document.createElement("span")
+    flag.setAttribute("class", "aflag flag-#{cc}")
+    li.appendChild(flag)
+
+    name = document.createElement("span")
+    name.innerHTML = country.country
+    li.appendChild(name)
+
+    return li
+
+  #
   # Given an element returns it absolute position
   #
   absolutePosFor = (element) ->
-    absTop = 0 
+    absTop = 0
     absLeft = 0
     while element
       absTop += element.offsetTop
@@ -279,7 +312,7 @@ window.Authy.UI = ->
       element = element.offsetParent
     return [absTop, absLeft]
 
- 
+
   #
   # Sets up the countriesDropDown
   #
@@ -306,30 +339,35 @@ window.Authy.UI = ->
     countryCodeValue.setAttribute "name", name
 
     classActive = ""
-    countriesAutocompleteHTML = "<ul>"
+    countriesAutocompleteList = document.createElement("ul")
     i = 0
 
     while i < countriesList.length
       classActive = (if (i is 0) then "active" else "")
-      countriesAutocompleteHTML += buildItem(classActive, countriesList[i], listId)
+      countriesAutocompleteList.appendChild(buildItem(classActive, countriesList[i], listId))
       i++
 
-    countriesAutocompleteHTML += "</ul>"
-    countriesDropdown.innerHTML = countriesAutocompleteHTML
+    countriesDropdown.innerHTML = ""
+    countriesDropdown.appendChild(countriesAutocompleteList)
     document.body.appendChild countriesDropdown
-  
+
     countriesInput = document.createElement("input")
     countriesInput.setAttribute "id", "countries-input-" + listId
     countriesInput.setAttribute "class", "countries-input"
     countriesInput.setAttribute "type", "text"
     countriesInput.setAttribute "autocomplete", "off"
 
+    placeholder = countriesSelect.getAttribute("placeholder")
+    if placeholder?
+      countriesSelect.removeAttribute "placeholder"
+      countriesInput.setAttribute "placeholder", placeholder
+
     countriesSelect.parentNode.insertBefore countriesInput, countriesSelect
     countriesSelect.parentNode.appendChild countryCodeValue
 
     countriesDropdown.setAttribute "id", "countries-autocomplete-" + listId
     countriesDropdown.setAttribute "class", "countries-autocomplete"
-    
+
     setupCountriesDropdownPosition(countriesInput, countriesDropdown)
 
     setupEvents countriesInput, listId
@@ -341,7 +379,7 @@ window.Authy.UI = ->
   setupCountriesDropdownPosition = (countriesInput, countriesDropdown) ->
     pos = absolutePosFor(countriesInput)
 
-    width = countriesInput.offsetWidth 
+    width = countriesInput.offsetWidth
     if width < 220
       width = 220
     countriesDropdown.setAttribute "style", "width: " + (width - 5) + "px; top: " + (pos[0] + 2 + countriesInput.offsetHeight) + "px; left: " + (pos[1] - 2) + "px;"
@@ -364,11 +402,11 @@ window.Authy.UI = ->
 
 
   getKeyCode = (event) ->
-    if event && event.which #others 
+    if event && event.which #others
       keyCode = event.which
     else if window.event
-      keyCode = window.event.keyCode 
-    
+      keyCode = window.event.keyCode
+
     return keyCode
 
 
@@ -383,13 +421,14 @@ window.Authy.UI = ->
     setupTooltip()
     findAndSetupCountries()
     setupCellphoneValidation()
-  
+
 
   @searchItem = (listId) ->
     classActive = "active"
     countriesInput = document.getElementById("countries-input-" + listId)
     str = countriesInput.value
-    countriesAutocompleteHTML = "<ul>"
+    countriesAutocompleteList = document.createElement("ul")
+    firstCountryCodeFound = null
     matches = false
     str = str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&") # Escape regular expression special characters
     reg = new RegExp("^" + str, "i")
@@ -398,27 +437,36 @@ window.Authy.UI = ->
     while i < countriesList.length
       countryItem = countriesList[i]
       countryWords = countryItem.country.toLowerCase().split(/\s+/)
-      
+
       # Capture words starting with the entered pattern
       cw = 0
 
       while cw < countryWords.length
-        if countryWords[cw].length > 2 && countryWords[cw].match(reg)
-          countriesAutocompleteHTML += buildItem(classActive, countryItem, listId)
+        if (countryWords[cw].length > 2 && countryWords[cw].match(reg)) || "#{countryItem.code}".match(reg)
+          countriesAutocompleteList.appendChild(buildItem(classActive, countryItem, listId))
           classActive = ""
           matches = true
+          firstCountryCodeFound = countryItem.code unless firstCountryCodeFound?
           break
         cw++
       i++
-    countriesAutocompleteHTML += "</ul>"
-    document.getElementById("countries-autocomplete-" + listId).innerHTML = countriesAutocompleteHTML  if matches
 
-  @autocomplete = (obj) ->
+    if matches
+      dropdownMenu = document.getElementById("countries-autocomplete-" + listId)
+      dropdownMenu.innerHTML = ""
+      dropdownMenu.appendChild(countriesAutocompleteList)
+      self.setCountryCode(listId, firstCountryCodeFound)
+
+  @autocomplete = (obj, hideList) ->
     listId = obj.getAttribute("data-list-id")
     document.getElementById("countries-input-" + listId).value = obj.getAttribute("data-name")
-    document.getElementById("countries-autocomplete-" + listId).style.display = "none"
-    document.getElementById("country-code-" + listId).value = obj.getAttribute("rel")
+    self.setCountryCode(listId, obj.getAttribute("rel"))
+    if hideList
+      hideAutocompleteList(listId)
     return
+
+  @setCountryCode = (listId, countryCode) ->
+    document.getElementById("country-code-" + listId).value = countryCode
 
   @setTooltip = (title, msg) ->
     tooltip = document.getElementById("authy-tooltip")
@@ -426,7 +474,7 @@ window.Authy.UI = ->
     tooltip.getElementsByClassName("tooltip-title")[0].innerHTML = title
     tooltip.getElementsByClassName("tooltip-content")[0].innerHTML = msg
     return
-  
+
   return #class return
 Authy.UI.instance = ->
   unless @ui
@@ -437,7 +485,7 @@ Authy.UI.instance = ->
 window.onload = ->
   Authy.UI.instance()
 
-  
-  
-   
+
+
+
 

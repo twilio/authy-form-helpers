@@ -29,6 +29,7 @@ namespace :js do
   task :compress do
     puts "Compressing javascript"
     js = File.read("#{Dir.pwd}/src/form.authy.js")
+    require "yui/compressor"
     compressor = YUI::JavaScriptCompressor.new
     min_js = compressor.compress(js)
     File.open("#{Dir.pwd}/src/form.authy.min.js", 'w') { |file| file.write(min_js) }
