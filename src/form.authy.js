@@ -4,7 +4,6 @@
   if (document.getElementsByClassName == null) {
     document.getElementsByClassName = function(className, parentElement) {
       var child, children, elements, i, length;
-
       children = (parentElement || document.body).getElementsByTagName("*");
       elements = [];
       child = void 0;
@@ -25,8 +24,7 @@
   }
 
   window.Authy.UI = function() {
-    var absolutePosFor, buildItem, countriesList, findAndSetupCountries, getKeyCode, hideAutocompleteList, processKey13, processKey38, processKey40, self, setActive, setupAuthyTokenValidation, setupCellphoneValidation, setupCountriesDropdown, setupCountriesDropdownPosition, setupEvents, setupTooltip, setupTooltipPosition, tooltipMessage, tooltipTitle;
-
+    var absolutePosFor, buildItem, countriesList, findAndSetupCountries, getKeyCode, hideAutocompleteList, processKey13, processKey38, processKey40, self, setActive, setCountryField, setupAuthyTokenValidation, setupCellphoneValidation, setupCountriesDropdown, setupCountriesDropdownPosition, setupEvents, setupTooltip, setupTooltipPosition, tooltipMessage, tooltipTitle;
     self = this;
     tooltipTitle = "Authy Help Tooltip";
     tooltipMessage = "This is a help tooltip for your users. You can set the message by doing: authyUI.setTooltip(\"title\", \"message\");";
@@ -683,7 +681,6 @@
     ];
     setupCellphoneValidation = function() {
       var cellPhone;
-
       cellPhone = document.getElementById("authy-cellphone");
       if (!cellPhone) {
         return;
@@ -698,7 +695,6 @@
     };
     setupAuthyTokenValidation = function() {
       var token;
-
       token = document.getElementById("authy-token");
       if (!token) {
         return;
@@ -713,7 +709,6 @@
     };
     setupTooltip = function() {
       var authy_help, tooltip;
-
       authy_help = document.getElementById("authy-help");
       if (!authy_help) {
         return;
@@ -734,7 +729,6 @@
     };
     setupTooltipPosition = function(helpLink, tooltip) {
       var pos, tooltipLeft, tooltipTop;
-
       pos = absolutePosFor(helpLink);
       tooltipTop = pos[0];
       tooltipLeft = pos[1] + helpLink.offsetWidth + 5;
@@ -742,7 +736,6 @@
     };
     processKey40 = function(listId) {
       var activeElement, caId, countriesArr, countriesDropdown, i, li, _i, _len;
-
       caId = "countries-autocomplete-" + listId;
       countriesDropdown = document.getElementById(caId);
       countriesArr = countriesDropdown.getElementsByTagName("li");
@@ -762,7 +755,6 @@
     };
     processKey38 = function(listId) {
       var activeElement, caId, countriesArr, i;
-
       caId = "countries-autocomplete-" + listId;
       countriesArr = document.getElementById(caId).getElementsByTagName("li");
       i = countriesArr.length - 1;
@@ -785,14 +777,12 @@
     };
     processKey13 = function(listId) {
       var obj;
-
       obj = document.getElementById("countries-autocomplete-" + listId).getElementsByClassName("active")[0];
       self.autocomplete(obj, true);
       return false;
     };
     setActive = function(liElement) {
       var li, liElements, listId, _i, _len;
-
       listId = liElement.getAttribute("data-list-id");
       liElements = document.getElementById("countries-autocomplete-" + listId).getElementsByTagName("li");
       for (_i = 0, _len = liElements.length; _i < _len; _i++) {
@@ -810,14 +800,12 @@
       };
       countriesInput.onfocus = function() {
         var countriesDropdown;
-
         countriesDropdown = document.getElementById("countries-autocomplete-" + listId);
         setupCountriesDropdownPosition(countriesInput, countriesDropdown);
         countriesDropdown.style.display = "block";
       };
       countriesInput.onkeyup = function(event) {
         var keyID;
-
         document.getElementById("countries-autocomplete-" + listId).style.display = "block";
         keyID = getKeyCode(event);
         switch (keyID) {
@@ -870,7 +858,6 @@
     };
     buildItem = function(classActive, country, listId) {
       var cc, flag, li, name;
-
       cc = country.country.substring(0, 2).toLowerCase() + country.code;
       li = document.createElement("li");
       li.setAttribute("class", classActive);
@@ -890,7 +877,6 @@
     };
     absolutePosFor = function(element) {
       var absLeft, absTop;
-
       absTop = 0;
       absLeft = 0;
       while (element) {
@@ -902,7 +888,6 @@
     };
     setupCountriesDropdown = function(countriesSelect, listId) {
       var buf, classActive, countries, countriesAutocompleteList, countriesDropdown, countriesInput, countryCodeValue, i, name, placeholder;
-
       if (!countriesSelect) {
         return;
       }
@@ -953,7 +938,6 @@
     };
     setupCountriesDropdownPosition = function(countriesInput, countriesDropdown) {
       var pos, width;
-
       pos = absolutePosFor(countriesInput);
       width = countriesInput.offsetWidth;
       if (width < 220) {
@@ -963,7 +947,6 @@
     };
     findAndSetupCountries = function() {
       var countries, i;
-
       setupCountriesDropdown(document.getElementById("authy-countries"), 0);
       countries = document.getElementsByClassName("authy-countries");
       i = 0;
@@ -972,9 +955,27 @@
         i++;
       }
     };
+    setCountryField = function() {
+      var country, countryCode, defaultListId, field, _i, _len, _results;
+      defaultListId = 0;
+      field = document.getElementById("authy-countries");
+      countryCode = field.value;
+      if (countryCode !== '') {
+        _results = [];
+        for (_i = 0, _len = countriesList.length; _i < _len; _i++) {
+          country = countriesList[_i];
+          if (country.code === countryCode) {
+            self.autocomplete(buildItem('active', country, defaultListId), true);
+            break;
+          } else {
+            _results.push(void 0);
+          }
+        }
+        return _results;
+      }
+    };
     getKeyCode = function(event) {
       var keyCode;
-
       if (event && event.which) {
         keyCode = event.which;
       } else if (window.event) {
@@ -986,11 +987,11 @@
       setupAuthyTokenValidation();
       setupTooltip();
       findAndSetupCountries();
+      setCountryField();
       return setupCellphoneValidation();
     };
     this.searchItem = function(listId) {
       var classActive, countriesAutocompleteList, countriesInput, countryItem, countryWords, cw, dropdownMenu, firstCountryCodeFound, i, matches, reg, str;
-
       classActive = "active";
       countriesInput = document.getElementById("countries-input-" + listId);
       str = countriesInput.value;
@@ -1027,7 +1028,6 @@
     };
     this.autocomplete = function(obj, hideList) {
       var listId;
-
       listId = obj.getAttribute("data-list-id");
       document.getElementById("countries-input-" + listId).value = obj.getAttribute("data-name");
       self.setCountryCode(listId, obj.getAttribute("rel"));
@@ -1040,7 +1040,6 @@
     };
     this.setTooltip = function(title, msg) {
       var tooltip;
-
       tooltip = document.getElementById("authy-tooltip");
       if (!tooltip) {
         return;

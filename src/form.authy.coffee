@@ -400,6 +400,19 @@ window.Authy.UI = ->
       i++
     return
 
+  #
+  # Display the country code that was selected before submitting the form
+  #
+  setCountryField = ->
+    defaultListId = 0
+    field = document.getElementById("authy-countries")
+    countryCode = field.value
+
+    if countryCode isnt ''
+      for country in countriesList
+        if country.code is countryCode
+          self.autocomplete(buildItem('active', country, defaultListId), true)
+          break
 
   getKeyCode = (event) ->
     if event && event.which #others
@@ -420,6 +433,7 @@ window.Authy.UI = ->
     setupAuthyTokenValidation()
     setupTooltip()
     findAndSetupCountries()
+    setCountryField()
     setupCellphoneValidation()
 
 
