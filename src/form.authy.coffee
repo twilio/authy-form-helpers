@@ -128,6 +128,14 @@ window.Authy.UI = ->
 
     return
 
+  #Disable the autocomplete on Authy Token input
+  disableAutocompleteAuthyToken = ->
+    token = document.getElementById("authy-token")
+    return unless token
+    token.setAttribute "autocomplete", "off"
+
+    return
+
   #Sets the help toolTip
   setupTooltip = ->
     authy_help = document.getElementById("authy-help")
@@ -406,6 +414,7 @@ window.Authy.UI = ->
   setCountryField = ->
     defaultListId = 0
     field = document.getElementById("authy-countries")
+    return unless field
     countryCode = field.value
 
     if countryCode isnt ''
@@ -431,6 +440,7 @@ window.Authy.UI = ->
 
   @init = ->
     setupAuthyTokenValidation()
+    disableAutocompleteAuthyToken()
     setupTooltip()
     findAndSetupCountries()
     setCountryField()

@@ -1,4 +1,5 @@
 (function() {
+
   window.Authy = {};
 
   if (document.getElementsByClassName == null) {
@@ -24,7 +25,7 @@
   }
 
   window.Authy.UI = function() {
-    var absolutePosFor, buildItem, countriesList, findAndSetupCountries, getKeyCode, hideAutocompleteList, processKey13, processKey38, processKey40, self, setActive, setCountryField, setupAuthyTokenValidation, setupCellphoneValidation, setupCountriesDropdown, setupCountriesDropdownPosition, setupEvents, setupTooltip, setupTooltipPosition, tooltipMessage, tooltipTitle;
+    var absolutePosFor, buildItem, countriesList, disableAutocompleteAuthyToken, findAndSetupCountries, getKeyCode, hideAutocompleteList, processKey13, processKey38, processKey40, self, setActive, setCountryField, setupAuthyTokenValidation, setupCellphoneValidation, setupCountriesDropdown, setupCountriesDropdownPosition, setupEvents, setupTooltip, setupTooltipPosition, tooltipMessage, tooltipTitle;
     self = this;
     tooltipTitle = "Authy Help Tooltip";
     tooltipMessage = "This is a help tooltip for your users. You can set the message by doing: authyUI.setTooltip(\"title\", \"message\");";
@@ -707,6 +708,14 @@
         }
       };
     };
+    disableAutocompleteAuthyToken = function() {
+      var token;
+      token = document.getElementById("authy-token");
+      if (!token) {
+        return;
+      }
+      token.setAttribute("autocomplete", "off");
+    };
     setupTooltip = function() {
       var authy_help, tooltip;
       authy_help = document.getElementById("authy-help");
@@ -959,6 +968,9 @@
       var country, countryCode, defaultListId, field, _i, _len, _results;
       defaultListId = 0;
       field = document.getElementById("authy-countries");
+      if (!field) {
+        return;
+      }
       countryCode = field.value;
       if (countryCode !== '') {
         _results = [];
@@ -985,6 +997,7 @@
     };
     this.init = function() {
       setupAuthyTokenValidation();
+      disableAutocompleteAuthyToken();
       setupTooltip();
       findAndSetupCountries();
       setCountryField();
