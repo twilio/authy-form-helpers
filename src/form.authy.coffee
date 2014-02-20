@@ -282,7 +282,11 @@ window.Authy.UI = ->
       return
 
   hideAutocompleteList = (listId) ->
-    document.getElementById("countries-autocomplete-" + listId).style.display = "none"
+    autocompleteList = document.getElementById("countries-autocomplete-" + listId)
+    if autocomplete
+      return autocompleteList.style.display = "none"
+
+    return
 
   #
   # Returns each country code <li> item
@@ -392,14 +396,14 @@ window.Authy.UI = ->
       width = 220
     countriesDropdown.setAttribute "style", "width: " + (width - 5) + "px; top: " + (pos[0] + 2 + countriesInput.offsetHeight) + "px; left: " + (pos[1] - 2) + "px;"
 
-
-
-
   #
   # If there are multiple countries dropdows, finds each one and sets a countries Dropdown
   #
   findAndSetupCountries = ->
-    setupCountriesDropdown document.getElementById("authy-countries"), 0
+    authyCountries = document.getElementById("authy-countries")
+    return unless authyCountries
+
+    setupCountriesDropdown authyCountries, 0
     countries = document.getElementsByClassName("authy-countries")
     i = 0
 

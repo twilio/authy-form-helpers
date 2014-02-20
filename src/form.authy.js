@@ -863,7 +863,11 @@
       };
     };
     hideAutocompleteList = function(listId) {
-      return document.getElementById("countries-autocomplete-" + listId).style.display = "none";
+      var autocompleteList;
+      autocompleteList = document.getElementById("countries-autocomplete-" + listId);
+      if (autocomplete) {
+        return autocompleteList.style.display = "none";
+      }
     };
     buildItem = function(classActive, country, listId) {
       var cc, flag, li, name;
@@ -955,8 +959,12 @@
       return countriesDropdown.setAttribute("style", "width: " + (width - 5) + "px; top: " + (pos[0] + 2 + countriesInput.offsetHeight) + "px; left: " + (pos[1] - 2) + "px;");
     };
     findAndSetupCountries = function() {
-      var countries, i;
-      setupCountriesDropdown(document.getElementById("authy-countries"), 0);
+      var authyCountries, countries, i;
+      authyCountries = document.getElementById("authy-countries");
+      if (!authyCountries) {
+        return;
+      }
+      setupCountriesDropdown(authyCountries, 0);
       countries = document.getElementsByClassName("authy-countries");
       i = 0;
       while (i < countries.length) {
