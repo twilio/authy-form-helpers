@@ -283,7 +283,7 @@ window.Authy.UI = ->
 
   hideAutocompleteList = (listId) ->
     autocompleteList = document.getElementById("countries-autocomplete-" + listId)
-    if autocomplete
+    if autocompleteList
       return autocompleteList.style.display = "none"
 
     return

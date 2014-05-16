@@ -1,5 +1,4 @@
 (function() {
-
   window.Authy = {};
 
   if (document.getElementsByClassName == null) {
@@ -865,7 +864,7 @@
     hideAutocompleteList = function(listId) {
       var autocompleteList;
       autocompleteList = document.getElementById("countries-autocomplete-" + listId);
-      if (autocomplete) {
+      if (autocompleteList) {
         return autocompleteList.style.display = "none";
       }
     };
