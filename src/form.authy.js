@@ -960,10 +960,9 @@
     findAndSetupCountries = function() {
       var authyCountries, countries, i;
       authyCountries = document.getElementById("authy-countries");
-      if (!authyCountries) {
-        return;
+      if (authyCountries) {
+        setupCountriesDropdown(authyCountries, 0);
       }
-      setupCountriesDropdown(authyCountries, 0);
       countries = document.getElementsByClassName("authy-countries");
       i = 0;
       while (i < countries.length) {

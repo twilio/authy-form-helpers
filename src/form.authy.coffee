@@ -401,9 +401,9 @@ window.Authy.UI = ->
   #
   findAndSetupCountries = ->
     authyCountries = document.getElementById("authy-countries")
-    return unless authyCountries
+    if authyCountries
+      setupCountriesDropdown authyCountries, 0
 
-    setupCountriesDropdown authyCountries, 0
     countries = document.getElementsByClassName("authy-countries")
     i = 0
 
