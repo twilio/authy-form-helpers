@@ -45,6 +45,11 @@ Add `authy-countries` id to the Country input.
 
 To see a demo open sample/register.html and look at the Country input.
 
+###### Display the country code as number
+
+Add `data-show-as="number"` to the Country input.
+
+    <select id="authy-countries" data-show-as="number"></select>
 
 ##### Cellphone validations:
 

@@ -899,7 +899,7 @@
       return [absTop, absLeft];
     };
     setupCountriesDropdown = function(countriesSelect, listId) {
-      var buf, classActive, countries, countriesAutocompleteList, countriesDropdown, countriesInput, countryCodeValue, i, name, placeholder;
+      var buf, classActive, countries, countriesAutocompleteList, countriesDropdown, countriesInput, countriesInputType, countryCodeValue, i, name, placeholder;
       if (!countriesSelect) {
         return;
       }
@@ -940,6 +940,10 @@
       if (placeholder != null) {
         countriesSelect.removeAttribute("placeholder");
         countriesInput.setAttribute("placeholder", placeholder);
+      }
+      countriesInputType = countriesSelect.getAttribute("data-show-as");
+      if (/^number/i.exec(countriesInputType)) {
+        countriesInput.setAttribute("data-show-as", "number");
       }
       countriesSelect.parentNode.insertBefore(countriesInput, countriesSelect);
       countriesSelect.parentNode.appendChild(countryCodeValue);
@@ -1046,10 +1050,16 @@
       }
     };
     this.autocomplete = function(obj, hideList) {
-      var listId;
+      var countriesInput, countryCode, listId;
       listId = obj.getAttribute("data-list-id");
-      document.getElementById("countries-input-" + listId).value = obj.getAttribute("data-name");
-      self.setCountryCode(listId, obj.getAttribute("rel"));
+      countryCode = obj.getAttribute("rel");
+      countriesInput = document.getElementById("countries-input-" + listId);
+      if (countriesInput.getAttribute("data-show-as") === "number") {
+        countriesInput.value = "+" + countryCode;
+      } else {
+        countriesInput.value = obj.getAttribute("data-name");
+      }
+      self.setCountryCode(listId, countryCode);
       if (hideList) {
         hideAutocompleteList(listId);
       }

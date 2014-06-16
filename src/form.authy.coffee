@@ -374,6 +374,10 @@ window.Authy.UI = ->
       countriesSelect.removeAttribute "placeholder"
       countriesInput.setAttribute "placeholder", placeholder
 
+    countriesInputType = countriesSelect.getAttribute("data-show-as")
+    if /^number/i.exec(countriesInputType)
+      countriesInput.setAttribute "data-show-as", "number"
+
     countriesSelect.parentNode.insertBefore countriesInput, countriesSelect
     countriesSelect.parentNode.appendChild countryCodeValue
 
@@ -487,8 +491,15 @@ window.Authy.UI = ->
 
   @autocomplete = (obj, hideList) ->
     listId = obj.getAttribute("data-list-id")
-    document.getElementById("countries-input-" + listId).value = obj.getAttribute("data-name")
-    self.setCountryCode(listId, obj.getAttribute("rel"))
+    countryCode = obj.getAttribute("rel")
+    countriesInput = document.getElementById("countries-input-" + listId)
+
+    if countriesInput.getAttribute("data-show-as") == "number"
+      countriesInput.value = "+" + countryCode;
+    else
+      countriesInput.value = obj.getAttribute("data-name");
+
+    self.setCountryCode(listId, countryCode)
     if hideList
       hideAutocompleteList(listId)
     return
