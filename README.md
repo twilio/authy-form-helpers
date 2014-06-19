@@ -26,11 +26,11 @@ Add this in your HTML \<head\>
 
 or you can use CloudFlare CDN:
 
-    Compressed CSS: //cdnjs.cloudflare.com/ajax/libs/authy-forms.css/2.0/form.authy.min.css
-    Compressed JS: //cdnjs.cloudflare.com/ajax/libs/authy-forms.js/2.0/form.authy.min.js
+    Compressed CSS: //cdnjs.cloudflare.com/ajax/libs/authy-forms.css/2.2/form.authy.min.css
+    Compressed JS: //cdnjs.cloudflare.com/ajax/libs/authy-forms.js/2.2/form.authy.min.js
 
-    <link href="//cdnjs.cloudflare.com/ajax/libs/authy-forms.css/2.0/form.authy.min.css" media="screen" rel="stylesheet" type="text/css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/authy-forms.js/2.0/form.authy.min.js" type="text/javascript"></script>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/authy-forms.css/2.2/form.authy.min.css" media="screen" rel="stylesheet" type="text/css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/authy-forms.js/2.2/form.authy.min.js" type="text/javascript"></script>
 
 
 ## Registration form (user enabling two factor)
