@@ -486,8 +486,8 @@
         "country": "Timor-Leste (+670)",
         "code": "670"
       }, {
-        "country": "Guam (+671)",
-        "code": "671"
+        "country": "Guam (+1671)",
+        "code": "1671"
       }, {
         "country": "Brunei (+673)",
         "code": "673"
