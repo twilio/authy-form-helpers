@@ -936,6 +936,9 @@
       countriesInput.setAttribute("class", "countries-input");
       countriesInput.setAttribute("type", "text");
       countriesInput.setAttribute("autocomplete", "off");
+      if (countriesSelect.getAttribute("required") !== null) {
+        countriesInput.setAttribute("required", "required");
+      }
       placeholder = countriesSelect.getAttribute("placeholder");
       if (placeholder != null) {
         countriesSelect.removeAttribute("placeholder");
