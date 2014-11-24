@@ -294,6 +294,8 @@ window.Authy.UI = ->
   buildItem = (classActive, country, listId) ->
     cc = country.country.substring(0, 2).toLowerCase() + country.code
     li = document.createElement("li")
+    if classActive
+      li.setAttribute("selected", true);
     li.setAttribute("class", classActive)
     li.setAttribute("data-list-id", listId)
     li.setAttribute("rel", country.code)
@@ -352,11 +354,27 @@ window.Authy.UI = ->
 
     classActive = ""
     countriesAutocompleteList = document.createElement("ul")
+
+    # Find value in countries list, if it exists
+    if countriesSelect.getAttribute('data-value')
+      i = 0;
+      selectValue = countriesSelect.getAttribute('data-value').replace('+', '');
+      while i < countriesList.length
+        if countriesList[i].code == selectValue
+          activeItem = countriesList[i]
+          break
+        i++
+    if !activeItem 
+      activeItem = countriesList[0]
+
     i = 0
 
     while i < countriesList.length
-      classActive = (if (i is 0) then "active" else "")
-      countriesAutocompleteList.appendChild(buildItem(classActive, countriesList[i], listId))
+      classActive = (if (activeItem is countriesList[i]) then "active" else "")
+      listItem = buildItem(classActive, countriesList[i], listId)
+      countriesAutocompleteList.appendChild(listItem)
+      if activeItem == countriesList[i] 
+        activeItem = listItem
       i++
 
     countriesDropdown.innerHTML = ""
@@ -389,6 +407,7 @@ window.Authy.UI = ->
     setupCountriesDropdownPosition(countriesInput, countriesDropdown)
 
     setupEvents countriesInput, listId
+    self.autocomplete activeItem
     return
 
   #
