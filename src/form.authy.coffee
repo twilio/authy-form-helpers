@@ -76,7 +76,7 @@ window.Authy.UI = ->
       {"country":"Guadeloupe (+590)","code":"590"},{"country":"Bolivia (+591)","code":"591"},{"country":"Guyana (+592)","code":"592"},
       {"country":"Ecuador (+593)","code":"593"},{"country":"French Guiana (+594)","code":"594"},{"country":"Paraguay (+595)","code":"595"},
       {"country":"Martinique (+596)","code":"596"},{"country":"Suriname (+597)","code":"597"},{"country":"Uruguay (+598)","code":"598"},
-      {"country":"Netherlands Antilles (+599)","code":"599"},{"country":"Timor-Leste (+670)","code":"670"},{"country":"Guam (+671)","code":"671"},
+      {"country":"Netherlands Antilles (+599)","code":"599"},{"country":"Timor-Leste (+670)","code":"670"},{"country":"Guam (+1671)","code":"1671"},
       {"country":"Brunei (+673)","code":"673"},{"country":"Nauru (+674)","code":"674"},{"country":"Papua New Guinea (+675)","code":"675"},
       {"country":"Tonga (+676)","code":"676"},{"country":"Solomon Islands (+677)","code":"677"},{"country":"Vanuatu (+678)","code":"678"},
       {"country":"Fiji Islands (+679)","code":"679"},{"country":"Cook Islands (+682)","code":"682"},{"country":"Samoa (+685)","code":"685"},
