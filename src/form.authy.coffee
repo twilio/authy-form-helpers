@@ -97,7 +97,7 @@ window.Authy.UI = ->
       {"country":"Montserrat (+1664)","code":"1664"},{"country":"Saint Lucia (+1758)","code":"1758"},{"country":"Dominica (+1767)","code":"1767"},
       {"country":"St. Vincent and The Gren (+1784)","code":"1784"},{"country":"Puerto Rico (+1787)","code":"1787"},{"country":"Dominican Republic (+1809)","code":"1809"},
       {"country":"Dominican Republic2 (+1829)","code":"1829"},{"country":"Dominican Republic3 (+1849)","code":"1849"},{"country":"Trinidad and Tobago (+1868)","code":"1868"},
-      {"country":"Saint Kitts and Nevis (+1869)","code":"1869"},{"country":"Jamaica (+1876)","code":"1876"},{"country":"Congo (+2420)","code":"2420"}
+      {"country":"Saint Kitts and Nevis (+1869)","code":"1869"},{"country":"Jamaica (+1876)","code":"1876"},{"country":"Congo (+242)","code":"242"}
     ]
 
 
