@@ -675,8 +675,8 @@
         "country": "Jamaica (+1876)",
         "code": "1876"
       }, {
-        "country": "Congo (+2420)",
-        "code": "2420"
+        "country": "Congo (+242)",
+        "code": "242"
       }
     ];
     setupCellphoneValidation = function() {
