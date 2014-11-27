@@ -1,4 +1,8 @@
 (function() {
+  if (typeof window === "undefined") {
+    return;
+  }
+
   window.Authy = {};
 
   if (document.getElementsByClassName == null) {

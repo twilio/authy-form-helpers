@@ -1,3 +1,5 @@
+return if typeof window is "undefined"
+
 window.Authy = {}
 
 # Fix Internet Explorer by defining getElementsByClassName
