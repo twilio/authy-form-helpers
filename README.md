@@ -51,10 +51,15 @@ Add `data-show-as="number"` to the Country input.
 
     <select id="authy-countries" data-show-as="number"></select>
 
+###### Set the default country code
+
+Add `data-value="+{country_code}"` to the Country input.
+
+    <select id="authy-countries" data-value="+57"></select>
+
 ##### Cellphone validations:
 
 Add `authy-cellphone` id to the cellphone input.
-
 
     <input id="authy-cellphone"  type="text" value=""/>
 
