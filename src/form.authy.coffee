@@ -320,11 +320,11 @@ window.Authy.UI = ->
   # Given an element returns it absolute position
   #
   absolutePosFor = (element) ->
-    absTop = 0
-    absLeft = 0
+    absTop = pageYOffset
+    absLeft = pageXOffset
     while element
-      absTop += element.offsetTop
-      absLeft += element.offsetLeft
+      absTop += element.offsetTop-element.scrollTop
+      absLeft += element.offsetLeft-element.scrollLeft
       element = element.offsetParent
     return [absTop, absLeft]
 
