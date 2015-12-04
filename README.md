@@ -109,4 +109,6 @@ To see a demo open sample/login.html and look at the cellphone input.
 
 E-mail us at support@authy.com
 
- use
+## Copyright
+
+Copyright (c) 2013-2020 Authy Inc. See LICENSE.txt for further details.
