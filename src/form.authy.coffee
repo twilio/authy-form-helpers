@@ -307,7 +307,7 @@ window.Authy.UI = ->
       setActive(li)
 
     flag = document.createElement("span")
-    flag.setAttribute("class", "aflag flag-#{cc}")
+    flag.setAttribute("class", "aflag authy-flag-#{cc}")
     li.appendChild(flag)
 
     name = document.createElement("span")
