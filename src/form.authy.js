@@ -887,7 +887,7 @@
         return setActive(li);
       };
       flag = document.createElement("span");
-      flag.setAttribute("class", "aflag flag-" + cc);
+      flag.setAttribute("class", "aflag authy-flag-" + cc);
       li.appendChild(flag);
       name = document.createElement("span");
       name.innerHTML = country.country;
@@ -966,6 +966,7 @@
       }
       placeholder = countriesSelect.getAttribute("placeholder");
       if (placeholder != null) {
+        countriesInput.setAttribute("init-placeholder", "true");
         countriesSelect.removeAttribute("placeholder");
         countriesInput.setAttribute("placeholder", placeholder);
       }
@@ -1083,7 +1084,9 @@
       listId = obj.getAttribute("data-list-id");
       countryCode = obj.getAttribute("rel");
       countriesInput = document.getElementById("countries-input-" + listId);
-      if (countriesInput.getAttribute("data-show-as") === "number") {
+      if (countriesInput.getAttribute("init-placeholder") != null) {
+        countriesInput.removeAttribute("init-placeholder");
+      } else if (countriesInput.getAttribute("data-show-as") === "number") {
         countriesInput.value = "+" + countryCode;
       } else {
         countriesInput.value = obj.getAttribute("data-name");

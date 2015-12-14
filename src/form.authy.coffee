@@ -307,7 +307,7 @@ window.Authy.UI = ->
       setActive(li)
 
     flag = document.createElement("span")
-    flag.setAttribute("class", "aflag flag-#{cc}")
+    flag.setAttribute("class", "aflag authy-flag-#{cc}")
     li.appendChild(flag)
 
     name = document.createElement("span")
@@ -393,6 +393,7 @@ window.Authy.UI = ->
 
     placeholder = countriesSelect.getAttribute("placeholder")
     if placeholder?
+      countriesInput.setAttribute "init-placeholder", "true"
       countriesSelect.removeAttribute "placeholder"
       countriesInput.setAttribute "placeholder", placeholder
 
@@ -517,7 +518,9 @@ window.Authy.UI = ->
     countryCode = obj.getAttribute("rel")
     countriesInput = document.getElementById("countries-input-" + listId)
 
-    if countriesInput.getAttribute("data-show-as") == "number"
+    if countriesInput.getAttribute("init-placeholder")?
+      countriesInput.removeAttribute("init-placeholder")
+    else if countriesInput.getAttribute("data-show-as") == "number"
       countriesInput.value = "+" + countryCode;
     else
       countriesInput.value = obj.getAttribute("data-name");
