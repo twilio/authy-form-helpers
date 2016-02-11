@@ -32,9 +32,13 @@ or you can use CloudFlare CDN:
     <link href="//cdnjs.cloudflare.com/ajax/libs/authy-form-helpers/2.3/form.authy.min.css" media="screen" rel="stylesheet" type="text/css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/authy-form-helpers/2.3/form.authy.min.js" type="text/javascript"></script>
 
-## Install with Bower
+## Install with Bower & NPM
 
     bower install authy-form-helpers
+
+    or
+
+    npm install authy-form-helpers
 
 ## Registration form (user enabling two factor)
 
