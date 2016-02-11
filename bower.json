@@ -1,0 +1,31 @@
+{
+  "name": "authy-form-helpers",
+  "version": "2.3",
+  "homepage": "https://github.com/authy/authy-form-helpers",
+  "authors": [
+    "Authy Inc. <support@authy.com>"
+  ],
+  "description": "Authy javascripts and css file to help create quick forms for the authy api",
+  "main": [
+    "src/form.authy.js",
+    "src/form.authy.css",
+    "src/flag.authy.css"
+  ],
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "Authy",
+    "2fa",
+    "form",
+    "helper"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
