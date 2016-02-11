@@ -1,6 +1,6 @@
 {
   "name": "authy-form-helpers",
-  "version": "2.3.0",
+  "version": "2.4.2",
   "description": "Authy javascripts and css file to help create quick forms for the authy api",
   "main": "index.js",
   "scripts": {
