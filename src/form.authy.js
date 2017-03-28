@@ -958,7 +958,10 @@
       document.body.appendChild(countriesDropdown);
       countriesInput = document.createElement("input");
       countriesInput.setAttribute("id", "countries-input-" + listId);
-      countriesInput.setAttribute("class", "countries-input");
+      countriesInput.classList.add("countries-input");
+      for (var i = 0; i < countriesSelect.classList.length; i++) {
+        countriesInput.classList.add(countriesSelect.classList[i]);
+      }
       countriesInput.setAttribute("type", "text");
       countriesInput.setAttribute("autocomplete", "off");
       if (countriesSelect.getAttribute("required") !== null) {
