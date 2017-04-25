@@ -107,7 +107,7 @@ To see a demo open sample/login.html and look at the cellphone input.
 
 ## Need help?
 
-E-mail us at support@authy.com
+Contact us via https://support.authy.com
 
 ## Copyright
 
