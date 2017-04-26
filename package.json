@@ -1,0 +1,24 @@
+{
+  "name": "authy-form-helpers",
+  "version": "2.4.3",
+  "description": "Authy javascripts and css file to help create quick forms for the authy api",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cepinos/authy-form-helpers.git"
+  },
+  "keywords": [
+    "2fa",
+    "Form",
+    "helpers"
+  ],
+  "author": "Authy Inc. <support@authy.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cepinos/authy-form-helpers/issues"
+  },
+  "homepage": "https://github.com/cepinos/authy-form-helpers#readme"
+}
